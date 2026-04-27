@@ -1,0 +1,219 @@
+{
+  "main": {
+    "id": "3410609c4a8f1120",
+    "type": "split",
+    "children": [
+      {
+        "id": "4fd97b0b592e46d6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f841012a616930af",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "01游戏攻略/异度之刃/異度之刃DE支线任务.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": false
+              },
+              "icon": "lucide-file",
+              "title": "異度之刃DE支线任务"
+            }
+          },
+          {
+            "id": "28016e609ab6e418",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "01游戏攻略/异度之刃/異度之刃DE支线任务.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "異度之刃DE支线任务"
+            }
+          },
+          {
+            "id": "10ed5373331e0ec8",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "01游戏攻略/异度之刃/異度之刃DE支线任务.md",
+                "mode": "source",
+                "source": true
+              },
+              "icon": "lucide-file",
+              "title": "異度之刃DE支线任务"
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "a506138dda285c9e",
+    "type": "split",
+    "children": [
+      {
+        "id": "0cd5f7d94599ad72",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "fd9c91d33ce0bd3c",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
+            }
+          },
+          {
+            "id": "df39a4125859392a",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "0505bf9301fa6443",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "28312bad1cc98714",
+    "type": "split",
+    "children": [
+      {
+        "id": "43832ff93389981e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "4a48642235900299",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "01游戏攻略/异度之刃/異度之刃DE支线任务.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": false
+              },
+              "icon": "links-coming-in",
+              "title": "異度之刃DE支线任务 的反向链接列表"
+            }
+          },
+          {
+            "id": "bf53ca1886ae373f",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "01游戏攻略/异度之刃/異度之刃DE支线任务.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "異度之刃DE支线任务 的出链列表"
+            }
+          },
+          {
+            "id": "23ce86ca5c554c31",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          },
+          {
+            "id": "be0e1425fe966b71",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "01游戏攻略/异度之刃/異度之刃DE支线任务.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "異度之刃DE支线任务 的大纲"
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "bases:新建数据库": false,
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false
+    }
+  },
+  "active": "10ed5373331e0ec8",
+  "lastOpenFiles": [
+    "01游戏攻略/异度之刃/FCB7DF00",
+    "01游戏攻略/异度之刃/4CB7DF00",
+    "01游戏攻略/异度之刃/8BB7DF00",
+    "01游戏攻略/异度之刃/A980DF00",
+    "01游戏攻略/异度之刃/C3DFBF00",
+    "01游戏攻略/异度之刃/F2DFBF00",
+    "01游戏攻略/异度之刃/22DFBF00",
+    "01游戏攻略/异度之刃/61DFBF00",
+    "01游戏攻略/异度之刃/6537AF00",
+    "01游戏攻略/异度之刃/5F27AF00",
+    "01游戏攻略/异度之刃/AE27AF00",
+    "01游戏攻略/异度之刃/异度之刃任务一览.md",
+    "Welcome.md",
+    "01游戏攻略/异度之刃/異度之刃DE支线任务.md"
+  ]
+}

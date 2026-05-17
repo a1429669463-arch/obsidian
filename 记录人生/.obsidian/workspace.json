@@ -27,16 +27,44 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "無題のファイル.md",
+                "file": "Projects/FWL/運用レポート.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "無題のファイル"
+              "title": "運用レポート"
+            }
+          },
+          {
+            "id": "fd1e196a27fdad43",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Projects/FWL/FWL.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "FWL"
+            }
+          },
+          {
+            "id": "89e6b61953298390",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Projects/FWL/レポート種別.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "レポート種別"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -59,7 +87,7 @@
                 "autoReveal": false
               },
               "icon": "lucide-folder-closed",
-              "title": "ファイルエクスプローラ"
+              "title": "文件列表"
             }
           },
           {
@@ -93,7 +121,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 212.5
+    "width": 314.5
   },
   "right": {
     "id": "28312bad1cc98714",
@@ -157,13 +185,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "02办公软件/EXCEL/函数.md",
+                "file": "Projects/FWL/レポート種別.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "函数 的大纲"
+              "title": "レポート種別 的大纲"
             }
           },
           {
@@ -175,19 +203,9 @@
               "icon": "calendar-with-checkmark",
               "title": "Calendar"
             }
-          },
-          {
-            "id": "cea8d12c62f7aea6",
-            "type": "leaf",
-            "state": {
-              "type": "copilot-chat-view",
-              "state": {},
-              "icon": "message-square",
-              "title": "Copilot"
-            }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -195,27 +213,36 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:クイックスイッチャーを開く": false,
-      "graph:グラフビューを開く": false,
-      "canvas:新規キャンバスを作成": false,
-      "daily-notes:今日のデイリーノートを開く": false,
-      "templates:テンプレートを挿入": false,
-      "command-palette:コマンドパレットを開く": false,
-      "bases:新規ベースを作成": false,
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false,
+      "bases:新建数据库": false,
       "copilot:Open Copilot Chat": false
     }
   },
-  "active": "ee37e6ff32a73b16",
+  "active": "89e6b61953298390",
   "lastOpenFiles": [
-    "Projects/FWL/ファンド.md",
-    "無題のファイル.md",
+    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~66D3F.tmp",
+    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~46BCF.tmp",
+    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~8996C.tmp",
+    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~AF3D2.tmp",
+    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~C8927.tmp",
+    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~DFDA2.tmp",
+    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~F008A.tmp",
     "Projects/FWL/ファンド属性管理画面.md",
-    "Projects/FWL/合冊パターン管理画面.md",
-    "Projects/FWL/運用レポート.md",
-    "Projects/FWL/販売レポート.md",
+    "Projects/FWL/ファンド.md",
     "Projects/FWL/銘柄.md",
+    "Projects/FWL/合冊パターン管理画面.md",
     "Projects/FWL/本番リリース手順.md",
+    "Projects/FWL/販売レポート.md",
     "Projects/FWL/FWL.md",
+    "Projects/FWL/運用レポート.md",
+    "Projects/FWL/レポート種別.md",
+    "Area/IT相关/IT系统的理解.md",
+    "無題のファイル.md",
     "Area/IT相关/GIT.md",
     "Projects/FWL/SSAURFWL-1040_RAFD向けのput・get処理をSFTPに変える.md",
     "Projects/FWL/業務フロー.md",
@@ -229,19 +256,10 @@
     "04自我剖析/思考笔记.md",
     "未命名.base",
     "Projects/FWL",
-    "Area",
-    "Projects",
     "03日记/2026-05-10.md",
     "03日记/2026-05-08.md",
     "账号密码.md",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~45943.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~45878.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~4577E.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~456B3.tmp",
     "copilot/copilot-custom-prompts/Rewrite as tweet thread.md",
-    "copilot/copilot-custom-prompts/Simplify.md",
-    "copilot/copilot-custom-prompts/Summarize.md",
-    "copilot/copilot-custom-prompts/Translate to Chinese.md",
-    "copilot/copilot-custom-prompts/Emojify.md"
+    "copilot/copilot-custom-prompts/Simplify.md"
   ]
 }

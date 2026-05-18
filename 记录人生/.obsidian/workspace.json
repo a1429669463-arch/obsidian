@@ -41,30 +41,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Projects/FWL/FWL.md",
+                "file": "03日记/2026-05-18.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "FWL"
-            }
-          },
-          {
-            "id": "89e6b61953298390",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Projects/FWL/レポート種別.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "レポート種別"
+              "title": "2026-05-18"
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -87,7 +73,7 @@
                 "autoReveal": false
               },
               "icon": "lucide-folder-closed",
-              "title": "文件列表"
+              "title": "ファイルエクスプローラ"
             }
           },
           {
@@ -185,13 +171,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Projects/FWL/レポート種別.md",
-                "followCursor": true,
-                "showSearch": false,
+                "file": "03日记/2026-05-18.md",
+                "followCursor": false,
+                "showSearch": true,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "レポート種別 的大纲"
+              "title": "2026-05-18のアウトライン"
             }
           },
           {
@@ -213,18 +199,22 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:打开快速切换": false,
-      "graph:查看关系图谱": false,
-      "canvas:新建白板": false,
-      "daily-notes:打开/创建今天的日记": false,
-      "templates:插入模板": false,
-      "command-palette:打开命令面板": false,
-      "bases:新建数据库": false,
-      "copilot:Open Copilot Chat": false
+      "switcher:クイックスイッチャーを開く": false,
+      "graph:グラフビューを開く": false,
+      "canvas:新規キャンバスを作成": false,
+      "daily-notes:今日のデイリーノートを開く": false,
+      "templates:テンプレートを挿入": false,
+      "command-palette:コマンドパレットを開く": false,
+      "bases:新規ベースを作成": false
     }
   },
-  "active": "89e6b61953298390",
+  "active": "fd1e196a27fdad43",
   "lastOpenFiles": [
+    "Projects/FWL/FWL.md",
+    "Projects/FWL/レポート種別.md",
+    "03日记/2026-05-18.md",
+    "合冊テンプレート管理.md",
+    "Projects/FWL/合冊パターン管理画面.md",
     "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~66D3F.tmp",
     "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~46BCF.tmp",
     "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~8996C.tmp",
@@ -235,12 +225,9 @@
     "Projects/FWL/ファンド属性管理画面.md",
     "Projects/FWL/ファンド.md",
     "Projects/FWL/銘柄.md",
-    "Projects/FWL/合冊パターン管理画面.md",
     "Projects/FWL/本番リリース手順.md",
     "Projects/FWL/販売レポート.md",
-    "Projects/FWL/FWL.md",
     "Projects/FWL/運用レポート.md",
-    "Projects/FWL/レポート種別.md",
     "Area/IT相关/IT系统的理解.md",
     "無題のファイル.md",
     "Area/IT相关/GIT.md",
@@ -255,11 +242,9 @@
     "HOME.md",
     "04自我剖析/思考笔记.md",
     "未命名.base",
-    "Projects/FWL",
     "03日记/2026-05-10.md",
     "03日记/2026-05-08.md",
     "账号密码.md",
-    "copilot/copilot-custom-prompts/Rewrite as tweet thread.md",
-    "copilot/copilot-custom-prompts/Simplify.md"
+    "copilot/copilot-custom-prompts/Rewrite as tweet thread.md"
   ]
 }

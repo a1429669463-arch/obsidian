@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "4fd97b0b592e46d6",
+        "id": "5108c6358e2e763b",
         "type": "tabs",
         "children": [
           {
-            "id": "1312dc18ddf7ec1c",
+            "id": "950b2b301ba2d302",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -22,133 +22,35 @@
             }
           },
           {
-            "id": "baff00a02b31b5ba",
+            "id": "2cb140195de0780d",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Area/IT相关/AI学习路线.md",
+                "file": "Area/IT相关/Agent.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "AI学习路线"
+              "title": "Agent"
             }
           },
           {
-            "id": "a0235739f0ff166b",
+            "id": "20c644da24a1cb40",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Area/IT相关/机器学习.md",
+                "file": "Area/IT相关/AI.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "机器学习"
-            }
-          },
-          {
-            "id": "1c133b3a5135786c",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Area/IT相关/AI学习路线.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "AI学习路线"
-            }
-          },
-          {
-            "id": "656f24f8943588e4",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Area/IT相关/AI学习路线.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "AI学习路线"
-            }
-          },
-          {
-            "id": "7c89de86cb531118",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Area/IT相关/AI学习路线.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "AI学习路线"
-            }
-          },
-          {
-            "id": "176113485230f259",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Area/IT相关/上下文窗口.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "上下文窗口"
-            }
-          },
-          {
-            "id": "a9aafe2da5c6636d",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Area/IT相关/AI学习路线.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "AI学习路线"
-            }
-          },
-          {
-            "id": "3093f28c4d0da763",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Area/IT相关/LLM.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "LLM"
-            }
-          },
-          {
-            "id": "dde0e242dbf1470f",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Area/IT相关/MCP.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "MCP"
+              "title": "AI"
             }
           }
         ],
-        "currentTab": 9
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -171,7 +73,7 @@
                 "autoReveal": false
               },
               "icon": "lucide-folder-closed",
-              "title": "文件列表"
+              "title": "ファイルエクスプローラ"
             }
           },
           {
@@ -269,13 +171,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Area/IT相关/MCP.md",
+                "file": "Area/IT相关/AI.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "MCP 的大纲"
+              "title": "AIのアウトライン"
             }
           },
           {
@@ -297,43 +199,43 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:打开快速切换": false,
-      "graph:查看关系图谱": false,
-      "canvas:新建白板": false,
-      "daily-notes:打开/创建今天的日记": false,
-      "templates:插入模板": false,
-      "command-palette:打开命令面板": false,
-      "bases:新建数据库": false
+      "switcher:クイックスイッチャーを開く": false,
+      "graph:グラフビューを開く": false,
+      "canvas:新規キャンバスを作成": false,
+      "daily-notes:今日のデイリーノートを開く": false,
+      "templates:テンプレートを挿入": false,
+      "command-palette:コマンドパレットを開く": false,
+      "bases:新規ベースを作成": false
     }
   },
-  "active": "dde0e242dbf1470f",
+  "active": "20c644da24a1cb40",
   "lastOpenFiles": [
+    "Area/IT相关/Context Engineering.md",
     "Area/IT相关/Agent.md",
-    "Area/IT相关/LLM.md",
-    "Area/IT相关/MCP.md",
+    "Area/IT相关/AI skills.md",
     "Area/IT相关/AI学习路线.md",
-    "Area/IT相关/Prompt.md",
+    "Area/IT相关/GIT.md",
+    "Area/IT相关/git checkout.md",
+    "Area/IT相关/git reset.md",
+    "Area/IT相关/Ai幻觉.md",
     "Area/IT相关/AJP.md",
-    "Area/IT相关/上下文窗口.md",
     "Area/IT相关/AI.md",
+    "Area/IT相关/上下文.md",
+    "Area/IT相关/MCP.md",
+    "Area/IT相关/LLM.md",
+    "Area/IT相关/机器学习.md",
+    "Area/IT相关/Prompt.md",
     "Area/IT相关/Token.md",
     "().md",
-    "Area/IT相关/Ai幻觉.md",
-    "Area/IT相关/GIT.md",
     "Area/IT相关/Apache.md",
     "深度学习.md",
-    "Area/IT相关/机器学习.md",
     "Area/IT相关/HEAD指针.md",
     "Area/IT相关/HTTP.md",
-    "Area/IT相关/git reset.md",
     "Area/IT相关/httpd.conf.md",
     "Area/IT相关/ss.md",
     "Area/IT相关/人工神经网络.md",
     "無題のファイル.md",
     "Area/IT相关/特征学习.md",
-    "03日记/2026-05-20.md",
-    "Area/IT相关/反向代理.md",
-    "03日记/2026-05-18.md",
     "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~66D3F.tmp",
     "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~46BCF.tmp",
     "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~8996C.tmp",

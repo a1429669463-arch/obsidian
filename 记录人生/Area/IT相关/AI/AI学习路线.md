@@ -26,7 +26,7 @@ tags:
 - [[上下文管理]]
 - [[输出格式控制]]
 - [[约束条件]]
-- [[验收标准]]
+- [[验收标准]]**
 - [[AI自检]]
 - [[Prompt模板库]]
   
@@ -34,7 +34,7 @@ tags:
 
 ## 03_AI Skills  
   
-- [[AI skills]]  
+- [[Skills]]  
 - [[Skills的作用]]  
 - [[Skills和Prompt的区别]]  
 - [[Skills和工作流的关系]]  

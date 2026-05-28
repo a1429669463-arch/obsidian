@@ -4,151 +4,53 @@
     "type": "split",
     "children": [
       {
-        "id": "4fd97b0b592e46d6",
+        "id": "5108c6358e2e763b",
         "type": "tabs",
         "children": [
           {
-            "id": "a9aafe2da5c6636d",
+            "id": "2cb140195de0780d",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Area/IT相关/AI/基础概念/Context Engineering.md",
-                "mode": "preview",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Context Engineering"
-            }
-          },
-          {
-            "id": "ba10a024b514b5af",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Area/IT相关/AI/基础概念/Prompt.md",
+                "file": "無題のファイル.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Prompt"
+              "title": "無題のファイル"
             }
           },
           {
-            "id": "e511b7b15d4e677d",
+            "id": "7ce2a92410a10146",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Area/IT相关/AI/基础概念/Context Engineering.md",
+                "file": "Area/EXCEL/EXCEL.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Context Engineering"
+              "title": "EXCEL"
             }
           },
           {
-            "id": "84e32f97923dcc2d",
+            "id": "f0bc759982c4d17b",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Area/IT相关/AI/基础概念/渐进式披露.md",
+                "file": "未命名 1.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "渐进式披露"
-            }
-          },
-          {
-            "id": "217a378b6e622fcd",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Area/IT相关/AI/基础概念/Harness Engineering.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Harness Engineering"
-            }
-          },
-          {
-            "id": "db0614f4d3461659",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Area/IT相关/AI/基础概念/Prompt Engineering.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Prompt Engineering"
-            }
-          },
-          {
-            "id": "4b756c00385931f7",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Area/IT相关/AI/基础概念/Context Engineering.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Context Engineering"
-            }
-          },
-          {
-            "id": "729378efb686c36b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Area/IT相关/AI/基础概念/Harness engineering - leveraging Codex in an agent-first world.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Harness engineering - leveraging Codex in an agent-first world"
-            }
-          },
-          {
-            "id": "991855e95566ae82",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Area/IT相关/AI/实战/Excel转换markdown工作流思考.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Excel转换markdown工作流思考"
-            }
-          },
-          {
-            "id": "551facb237e751f8",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "copilot/copilot-conversations/检查Obsidian链接结构@20260523_012536.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "检查Obsidian链接结构@20260523_012536"
+              "title": "未命名 1"
             }
           }
         ],
-        "currentTab": 8
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -171,7 +73,7 @@
                 "autoReveal": false
               },
               "icon": "lucide-folder-closed",
-              "title": "文件列表"
+              "title": "ファイルエクスプローラ"
             }
           },
           {
@@ -180,7 +82,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "skills",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -188,7 +90,7 @@
                 "sortOrder": "alphabetical"
               },
               "icon": "lucide-search",
-              "title": "搜索"
+              "title": "検索"
             }
           },
           {
@@ -221,7 +123,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Area/IT相关/AI/实战/Excel转换markdown工作流思考.md",
+                "file": "03日记/2026-05-06.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -231,7 +133,7 @@
                 "unlinkedCollapsed": false
               },
               "icon": "links-coming-in",
-              "title": "Excel转换markdown工作流思考 的反向链接列表"
+              "title": "2026-05-06 的反向链接列表"
             }
           },
           {
@@ -269,13 +171,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Area/IT相关/AI/实战/Excel转换markdown工作流思考.md",
+                "file": "未命名 1.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Excel转换markdown工作流思考 的大纲"
+              "title": "未命名 1のアウトライン"
             }
           },
           {
@@ -287,74 +189,63 @@
               "icon": "calendar-with-checkmark",
               "title": "Calendar"
             }
-          },
-          {
-            "id": "b672b74e8395b9b1",
-            "type": "leaf",
-            "state": {
-              "type": "copilot-chat-view",
-              "state": {},
-              "icon": "message-square",
-              "title": "Copilot"
-            }
           }
         ],
-        "currentTab": 5
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 205.5
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:打开快速切换": false,
-      "graph:查看关系图谱": false,
-      "canvas:新建白板": false,
-      "daily-notes:打开/创建今天的日记": false,
-      "templates:插入模板": false,
-      "command-palette:打开命令面板": false,
-      "bases:新建数据库": false,
-      "copilot:Open Copilot Chat": false
+      "copilot:Open Copilot Chat": false,
+      "switcher:クイックスイッチャーを開く": false,
+      "graph:グラフビューを開く": false,
+      "canvas:新規キャンバスを作成": false,
+      "daily-notes:今日のデイリーノートを開く": false,
+      "templates:テンプレートを挿入": false,
+      "command-palette:コマンドパレットを開く": false,
+      "bases:新規ベースを作成": false
     }
   },
-  "active": "991855e95566ae82",
+  "active": "f0bc759982c4d17b",
   "lastOpenFiles": [
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~CB9C3.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~72655.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~F39F1.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~DABCF.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~A34C5.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~A33DA.tmp",
-    "Area/IT相关/AI/实战",
     "Area/IT相关/AI/基础概念/Harness engineering - leveraging Codex in an agent-first world.md",
-    "Area/IT相关/AI/实战/Excel转换markdown工作流思考.md",
-    "Area/IT相关/AI/Agent与工具/Skills.md",
-    "Area/IT相关/AI/基础概念/上下文.md",
-    "Area/IT相关/AI/基础概念/特征学习.md",
-    "Area/IT相关/AI/基础概念/Context Engineering.md",
-    "Area/IT相关/AI/基础概念/Token.md",
-    "Area/IT相关/AI/基础概念/Prompt Engineering.md",
-    "Area/IT相关/AI/基础概念/Prompt.md",
-    "Area/IT相关/AI/基础概念/LLM.md",
-    "Area/IT相关/AI/基础概念/Harness Engineering.md",
-    "Area/IT相关/AI/基础概念/Copilot 自动搜索与渐进式披露的区别.md",
-    "Area/IT相关/AI/Agent与工具/Agent.md",
-    "Area/IT相关/AI/Agent与工具",
-    "Area/IT相关/AI/基础概念",
-    "Area/IT相关/AI/基础概念/人工神经网络.md",
-    "copilot/copilot-conversations/AI学习诊断分析@20260523_182246.md",
-    "copilot/memory/Recent Conversations.md",
-    "copilot/memory",
-    "Area/IT相关/AI/基础概念/渐进式披露.md",
-    "Area/IT相关/AI/基础概念/机器学习.md",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~4EB6F.tmp",
     "未命名 1.md",
-    "Area/IT相关/AI/Agent与工具/MCP.md",
+    "無題のファイル 1.md",
+    "Area/EXCEL/EXCEL.md",
     "無題のファイル.md",
-    "copilot/copilot-custom-prompts/Rewrite as tweet thread.md",
-    "copilot/copilot-conversations/检查Obsidian链接结构@20260523_012536.md",
-    "Area/IT相关/AI/AI学习路线.md",
-    "Area/IT相关/AI/基础概念/Ai幻觉.md"
+    "Area/IT相关/MCP.md",
+    "Area/IT相关/AI.md",
+    "Area/IT相关/Context Engineering.md",
+    "Area/IT相关/Agent.md",
+    "Area/IT相关/AI skills.md",
+    "Area/IT相关/AI学习路线.md",
+    "Area/IT相关/GIT.md",
+    "Area/IT相关/git checkout.md",
+    "Area/IT相关/git reset.md",
+    "Area/IT相关/Ai幻觉.md",
+    "Area/IT相关/AJP.md",
+    "Area/IT相关/上下文.md",
+    "Area/IT相关/LLM.md",
+    "Area/IT相关/机器学习.md",
+    "Area/IT相关/Prompt.md",
+    "Area/IT相关/Token.md",
+    "().md",
+    "Area/IT相关/Apache.md",
+    "深度学习.md",
+    "Area/IT相关/HEAD指针.md",
+    "Area/IT相关/HTTP.md",
+    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~66D3F.tmp",
+    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~46BCF.tmp",
+    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~8996C.tmp",
+    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~AF3D2.tmp",
+    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~C8927.tmp",
+    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~DFDA2.tmp",
+    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~F008A.tmp",
+    "無題のフォルダ",
+    "Area/IT相关",
+    "未命名.base"
   ]
 }

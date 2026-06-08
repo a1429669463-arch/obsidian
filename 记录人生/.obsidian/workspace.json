@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "無題のファイル.md",
+                "file": "疑问.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "無題のファイル"
+              "title": "疑问"
             }
           },
           {
@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Area/IT相关/powerShell/命令一覧表.md",
+                "file": "Projects/FWL/ファンド.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "命令一覧表"
+              "title": "ファンド"
             }
           }
         ],
@@ -185,13 +185,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Area/IT相关/powerShell/命令一覧表.md",
+                "file": "Projects/FWL/ファンド.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "命令一覧表のアウトライン"
+              "title": "ファンドのアウトライン"
             }
           },
           {
@@ -225,13 +225,30 @@
   },
   "active": "df8dacecb8eb4f68",
   "lastOpenFiles": [
-    "Area/EXCEL/函数.md",
+    "推论.md",
+    "Projects/FWL/銘柄.md",
+    "Projects/FWL/運用レポート.md",
+    "Projects/FWL/レポート種別.md",
+    "Projects/FWL/ファンド属性管理画面.md",
+    "Projects/FWL/ファンド.md",
+    "Projects/FWL/FWL.md",
+    "Projects/异度之刃2/融合连击构筑思路.md",
+    "疑问.md",
+    "账号密码.md",
+    "Area/IT相关/python/pip配置.md",
+    "Area/IT相关/python/wheel包.md",
     "Area/IT相关/powerShell/命令一覧表.md",
+    "Area/IT相关/python",
+    "ゼノブレイド２攻略.xlsx",
+    "~$ゼノブレイド２攻略.xlsx",
+    "Projects/异度之刃2/战斗机制.md",
+    "Projects/异度之刃2/异度之刃2攻略.md",
+    "Projects/异度之刃2",
+    "Projects/异度之刃/越级挑战机制.md",
+    "Projects/异度之刃/宝石精炼.md",
+    "Area/EXCEL/函数.md",
     "Area/IT相关/powerShell",
     "Area/EXCEL/EXCEL.md",
-    "未命名 1.md",
-    "無題のファイル.md",
-    "账号密码.md",
     "Area/IT相关/Sql/SYMMETRIC KEY.md",
     "Area/IT相关/Sql",
     "Projects/FundPost/FundPost.md",
@@ -241,25 +258,8 @@
     "Area/IT相关/MCP.md",
     "Area/IT相关/AI.md",
     "Area/IT相关/Context Engineering.md",
-    "Area/IT相关/Agent.md",
-    "Area/IT相关/AI skills.md",
-    "Area/IT相关/AI学习路线.md",
-    "Area/IT相关/GIT.md",
-    "Area/IT相关/git checkout.md",
-    "Area/IT相关/git reset.md",
-    "Area/IT相关/Ai幻觉.md",
-    "Area/IT相关/AJP.md",
-    "Area/IT相关/上下文.md",
-    "Area/IT相关/LLM.md",
-    "Area/IT相关/机器学习.md",
-    "Area/IT相关/Prompt.md",
-    "Area/IT相关/Token.md",
     "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~66D3F.tmp",
     "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~46BCF.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~8996C.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~AF3D2.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~C8927.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~DFDA2.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~F008A.tmp"
+    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~8996C.tmp"
   ]
 }

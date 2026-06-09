@@ -27,16 +27,58 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Projects/FWL/业务属性/画面表示区分.md",
+                "file": "Projects/FWL/业务属性/配信設定日.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "画面表示区分"
+              "title": "配信設定日"
+            }
+          },
+          {
+            "id": "7620d6d1841d23a9",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Projects/FWL/業務操作/配信.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "配信"
+            }
+          },
+          {
+            "id": "7fcac26fa0d8661c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Projects/FWL/業務操作/過去分配信.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "過去分配信"
+            }
+          },
+          {
+            "id": "fc66bccfc61c485b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Projects/FWL/业务属性/FW公表日.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "FW公表日"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 4
       }
     ],
     "direction": "vertical"
@@ -59,7 +101,7 @@
                 "autoReveal": false
               },
               "icon": "lucide-folder-closed",
-              "title": "文件列表"
+              "title": "ファイルエクスプローラ"
             }
           },
           {
@@ -196,30 +238,36 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:打开快速切换": false,
-      "graph:查看关系图谱": false,
-      "canvas:新建白板": false,
-      "daily-notes:打开/创建今天的日记": false,
-      "templates:插入模板": false,
-      "command-palette:打开命令面板": false,
-      "bases:新建数据库": false,
+      "switcher:クイックスイッチャーを開く": false,
+      "graph:グラフビューを開く": false,
+      "canvas:新規キャンバスを作成": false,
+      "daily-notes:今日のデイリーノートを開く": false,
+      "templates:テンプレートを挿入": false,
+      "command-palette:コマンドパレットを開く": false,
+      "bases:新規ベースを作成": false,
       "copilot:Open Copilot Chat": false
     }
   },
-  "active": "1082a07129dee9ce",
+  "active": "fc66bccfc61c485b",
   "lastOpenFiles": [
+    "Projects/FWL/業務操作/過去分配信.md",
+    "Projects/FWL/业务属性/FW公表日.md",
+    "Projects/FWL/業務操作/配信.md",
+    "Projects/FWL/业务属性/配信設定日.md",
+    "Projects/FWL/業務操作",
+    "Projects/FWL/业务实体/販売レポート.md",
+    "Projects/FWL/业务实体/レポート種別.md",
+    "Projects/FWL/业务实体/運用レポート.md",
+    "Projects/FWL/业务属性/画面表示区分.md",
     "Projects/FWL/业务属性/汎用レポート.md",
     "Projects/FWL/业务属性/汎用文書(審査有).md",
     "Projects/FWL/业务属性/汎用目論見書.md",
     "Projects/FWL/业务属性/レポート種別.レポート種別区分.md",
-    "Projects/FWL/业务实体/レポート種別.md",
-    "Projects/FWL/业务属性/画面表示区分.md",
     "Projects/FWL/业务属性/ファンド.償還日.md",
     "Projects/FWL/业务属性/入力不可能型.md",
     "Area/IT相关/AI/基础概念/Ai幻觉.md",
     "Area/IT相关/AI/基础概念/Context Engineering.md",
     "Projects/FWL/业务实体/ファンド.md",
-    "Projects/FWL/业务实体/運用レポート.md",
     "Projects/FWL/业务实体/銘柄.md",
     "深度学习.md",
     "Projects/FWL/ファンド属性管理画面.md",
@@ -228,21 +276,15 @@
     "Projects/FWL/业务属性",
     "Area/IT相关/AI/实战/Excel转换Markdown skills制作经验.md",
     "Area/IT相关/AI/实战/Excel转换markdown工作流思考.md",
-    "Projects/FWL/业务实体/販売レポート.md",
     "Projects/FWL/业务实体",
     "Projects/FWL/千手申請.md",
     "ゼノブレイド２攻略~F1896.tmp",
     "ゼノブレイド２攻略~EA8BA.tmp",
     "Projects/异度之刃2/战斗机制.md",
     "ゼノブレイド２攻略~E2DA5.tmp",
-    "Projects/异度之刃2/融合连击构筑思路.md",
-    "無題のファイル 1.md",
-    "Area/EXCEL/EXCEL.md",
-    "Projects/异度之刃2/异度之刃2攻略.md",
     "Projects/异度之刃2",
     "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~CB9C3.tmp",
     "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~72655.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~F39F1.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~DABCF.tmp"
+    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~F39F1.tmp"
   ]
 }

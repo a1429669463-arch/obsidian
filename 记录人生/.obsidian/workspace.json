@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Projects/FWL/业务属性/画面表示区分.md",
+                "file": "無題のファイル.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "画面表示区分"
+              "title": "無題のファイル"
             }
           }
         ],
@@ -191,8 +191,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 338.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -208,12 +207,16 @@
   },
   "active": "1082a07129dee9ce",
   "lastOpenFiles": [
+    "Area/IT相关/AI/基础概念/特征学习.md",
+    "Area/IT相关/AI/基础概念/人工神经网络.md",
+    "Area/IT相关/AI/基础概念/机器学习.md",
+    "未命名.canvas",
+    "Projects/FWL/业务属性/画面表示区分.md",
     "Projects/FWL/业务属性/汎用レポート.md",
     "Projects/FWL/业务属性/汎用文書(審査有).md",
     "Projects/FWL/业务属性/汎用目論見書.md",
     "Projects/FWL/业务属性/レポート種別.レポート種別区分.md",
     "Projects/FWL/业务实体/レポート種別.md",
-    "Projects/FWL/业务属性/画面表示区分.md",
     "Projects/FWL/业务属性/ファンド.償還日.md",
     "Projects/FWL/业务属性/入力不可能型.md",
     "Area/IT相关/AI/基础概念/Ai幻觉.md",
@@ -236,9 +239,6 @@
     "Projects/异度之刃2/战斗机制.md",
     "ゼノブレイド２攻略~E2DA5.tmp",
     "Projects/异度之刃2/融合连击构筑思路.md",
-    "無題のファイル 1.md",
-    "Area/EXCEL/EXCEL.md",
-    "Projects/异度之刃2/异度之刃2攻略.md",
     "Projects/异度之刃2",
     "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~CB9C3.tmp",
     "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~72655.tmp",

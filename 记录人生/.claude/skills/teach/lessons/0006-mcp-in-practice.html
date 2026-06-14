@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 6 课：MCP 实战 — 你已经在用了，只是没意识到</title>
+<style>
+  :root {
+    --text: #1a1a1a; --muted: #555; --accent: #c44; --bg: #fefefe;
+    --code-bg: #f4f2f0; --border: #e0ddd8; --highlight: #fff8e1;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: Georgia, "Noto Serif CJK SC", "Source Han Serif SC", serif;
+    color: var(--text); background: var(--bg);
+    line-height: 1.75; max-width: 700px; margin: 0 auto; padding: 3rem 1.5rem 6rem;
+  }
+  h1 { font-size: 1.65rem; line-height: 1.3; margin-bottom: 0.3rem; font-family: -apple-system, "PingFang SC", sans-serif; }
+  h2 { font-size: 1.15rem; margin: 2rem 0 0.6rem; padding-top: 0.9rem; border-top: 1px solid var(--border); font-family: -apple-system, "PingFang SC", sans-serif; }
+  h3 { font-size: 1rem; margin: 1.2rem 0 0.4rem; font-family: -apple-system, "PingFang SC", sans-serif; }
+  p { margin: 0.65rem 0; }
+  .subtitle { color: var(--muted); font-size: 0.95rem; margin-bottom: 0.3rem; font-style: italic; }
+  .meta { font-size: 0.83rem; color: var(--muted); margin-bottom: 2rem; }
+  .meta span { margin-right: 1.3rem; }
+
+  .callout {
+    margin: 1.2rem 0; padding: 0.85rem 1rem;
+    border-left: 3px solid var(--accent); background: var(--highlight);
+    border-radius: 0 4px 4px 0; font-size: 0.9rem;
+  }
+  .callout strong { color: var(--accent); }
+
+  pre {
+    background: var(--code-bg); padding: 0.7rem 0.9rem; border-radius: 5px;
+    overflow-x: auto; font-size: 0.8rem; line-height: 1.5; margin: 0.8rem 0;
+    border: 1px solid var(--border);
+  }
+  code { font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace; font-size: 0.86em; }
+  pre code { font-size: 0.8rem; }
+
+  details {
+    margin: 0.8rem 0; padding: 0.7rem 0.9rem;
+    background: #fafaf8; border: 1px solid var(--border); border-radius: 5px;
+  }
+  details summary {
+    cursor: pointer; font-weight: 600;
+    font-family: -apple-system, "PingFang SC", sans-serif; color: var(--accent);
+  }
+  details summary:hover { text-decoration: underline; }
+  details .answer { margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed var(--border); }
+
+  table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.84rem; }
+  th { text-align: left; padding: 0.4rem 0.5rem; border-bottom: 2px solid var(--border); font-size: 0.75rem; color: var(--muted); }
+  td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: #fcfcfa; }
+
+  .nav { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.87rem; color: var(--muted); }
+  .nav a { color: var(--accent); }
+
+  .decision {
+    border: 2px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem;
+    margin: 1rem 0; font-family: -apple-system, "PingFang SC", sans-serif;
+    font-size: 0.84rem; line-height: 1.8; background: #fcfcfa;
+  }
+  .decision .q { color: var(--accent); font-weight: 700; }
+  .decision .arrow { color: var(--muted); margin: 0 0.3rem; }
+
+  .tag {
+    display: inline-block; font-size: 0.68rem; padding: 0.1em 0.4em; border-radius: 3px;
+    margin-right: 0.25em; font-weight: 600;
+  }
+  .tag-mcp { background: #e8f0fe; color: #36c; }
+  .tag-cli { background: #f3e5f5; color: #7b1fa2; }
+  .tag-skill { background: #e8f5e9; color: #2e7d32; }
+</style>
+</head>
+<body>
+
+<h1>第 6 课：MCP 实战</h1>
+<p class="subtitle">你已经接入了 2 个 MCP 工具——现在要学会「什么时候该用 MCP 而不是 CLI」</p>
+<p class="meta">
+  <span>📅 2026-06-14</span>
+  <span>⏱ ~20 分钟</span>
+  <span>← <a href="0005-skill-development-loop.html">第 5 课</a></span>
+</p>
+
+<h2>1. 先看一个事实</h2>
+
+<p>输入 <code>/context</code>，看 MCP tools 那一栏：</p>
+
+<pre><code>MCP tools · /mcp
+└ 2 tools · 0 tokens</code></pre>
+
+<p>你有 2 个 MCP 工具正在运行：<code>mcp__ide__executeCode</code> 和 <code>mcp__ide__getDiagnostics</code>。<strong>你已经在用 MCP 了</strong>，只是当它是「IDE 自带功能」而非「MCP 工具」。</p>
+
+<div class="callout">
+  <strong>第一件事：</strong>MCP 不是什么遥远的技术——它就是你当前 session 里那两个 <code>mcp__ide__*</code> 工具。就像你不会觉得「我在用 HTTP」——你只是在用浏览器。MCP 是传输层，工具才是你感受到的东西。
+</div>
+
+<h2>2. 你现在的做法 vs MCP 的做法</h2>
+
+<p>你说「平时都是让 AI 写 CLI 工具」。假设你要查当前目录下所有 <code>.md</code> 文件的行数——</p>
+
+<table>
+  <tr><th></th><th><span class="tag tag-cli">CLI 路径（你现在）</span></th><th><span class="tag tag-mcp">MCP 路径</span></th></tr>
+  <tr>
+    <td>怎么做</td>
+    <td>AI 写一段 PS 命令 → 调用 PowerShell 执行 → 解析输出</td>
+    <td>AI 调用 <code>mcp__filesystem__count_lines</code></td>
+  </tr>
+  <tr>
+    <td>AI 需要知道什么</td>
+    <td>PowerShell 语法、文件路径规则、输出格式</td>
+    <td>工具名 + 参数：<code>{pattern: "*.md"}</code></td>
+  </tr>
+  <tr>
+    <td>出错时</td>
+    <td>PS 语法错误、路径转义问题、编码问题</td>
+    <td>工具返回结构化错误信息</td>
+  </tr>
+  <tr>
+    <td>跨平台</td>
+    <td>换 Linux 要重写 bash 版本</td>
+    <td>同一工具、同一接口</td>
+  </tr>
+</table>
+
+<p>CLI 路径的本质：<strong>用通用工具（shell）做特定的事，AI 需要自己翻译「意图 → 命令」。</strong>这在简单场景下没问题，但翻译过程本身就是不确定性来源。</p>
+
+<p>MCP 路径的本质：<strong>把特定操作封装成结构化的工具接口，AI 不需要知道底层怎么实现。</strong></p>
+
+<h2>3. 决策框架：什么时候该用 MCP？</h2>
+
+<div class="decision">
+  <p style="margin:0 0 0.5rem; font-size:0.9rem;"><strong>每当你需要给 AI 一个「新能力」时，走这个决策树：</strong></p>
+  <p style="margin:0.3rem 0;"><span class="q">Q1:</span> 这个操作 AI 能否用现有工具完成（shell、文件读写、WebSearch）？</p>
+  <p style="margin:0.3rem 0 0.3rem 1.5rem;"><span class="arrow">→ 能，且简单</span> <strong>不需要新东西，直接用</strong></p>
+  <p style="margin:0.3rem 0 0.3rem 1.5rem;"><span class="arrow">→ 能，但需要复杂脚本</span> <strong>看 Q2</strong></p>
+  <p style="margin:0.3rem 0;"><span class="q">Q2:</span> 这个操作是否在<strong>多个 skill 中</strong>重复出现？</p>
+  <p style="margin:0.3rem 0 0.3rem 1.5rem;"><span class="arrow">→ 是</span> <strong>MCP</strong> — 封装一次，多 skill 复用</p>
+  <p style="margin:0.3rem 0 0.3rem 1.5rem;"><span class="arrow">→ 否，只在一个 skill 中用</span> <strong>看 Q3</strong></p>
+  <p style="margin:0.3rem 0;"><span class="q">Q3:</span> 出错时，AI 能自己诊断和修复吗？</p>
+  <p style="margin:0.3rem 0 0.3rem 1.5rem;"><span class="arrow">→ 能（简单脚本，易调试）</span> <strong>CLI 就够</strong></p>
+  <p style="margin:0.3rem 0 0.3rem 1.5rem;"><span class="arrow">→ 不能（需要专门知识、权限、状态管理）</span> <strong>MCP</strong></p>
+</div>
+
+<details>
+  <summary>🔍 具体例子：什么时候选 MCP？</summary>
+  <div class="answer">
+    <table>
+      <tr><th>场景</th><th>决策</th><th>理由</th></tr>
+      <tr>
+        <td>查文件行数</td>
+        <td>CLI ✅</td>
+        <td>一个 PS 命令搞定，不会出错</td>
+      </tr>
+      <tr>
+        <td>在多个 skill 中需要查询 Jira issue</td>
+        <td><strong>MCP ✅</strong></td>
+        <td>复用 + Jira API 有认证和分页逻辑，CLI 脚本容易出错</td>
+      </tr>
+      <tr>
+        <td>查当前 IDE 的诊断错误</td>
+        <td><strong>MCP ✅</strong></td>
+        <td>你已经在用了——<code>mcp__ide__getDiagnostics</code>。它不需要 AI 知道 VS Code 的内部 API。</td>
+      </tr>
+      <tr>
+        <td>格式化一个 JSON 文件</td>
+        <td>CLI ✅</td>
+        <td>一行 <code>ConvertFrom-Json</code>，不需要专门工具</td>
+      </tr>
+      <tr>
+        <td>操作数据库（查/写/迁移）</td>
+        <td><strong>MCP ✅</strong></td>
+        <td>连接管理、SQL 注入防护、事务——CLI 脚本不可靠</td>
+      </tr>
+    </table>
+  </div>
+</details>
+
+<h2>4. MCP 的隐藏成本：上下文 token</h2>
+
+<p>你 MCP 笔记里已经写了：「接入过多 MCP 工具时，元信息会占用上下文」。这是对的，但还不够具体。</p>
+
+<p>每个 MCP 工具的描述、参数名、参数类型、参数描述——全部占上下文。看你的 ide 工具：</p>
+
+<pre><code>mcp__ide__executeCode    — 0 tokens  ← 因为还没被调用过
+mcp__ide__getDiagnostics — 0 tokens</code></pre>
+
+<p>0 token 是因为这些工具的定义很轻量。但如果你接入一个有 20 个方法的数据库 MCP server，每个方法有 5 个参数——那就是几百个 token，<strong>永久占用</strong>上下文。这就是你笔记里提到的问题。</p>
+
+<div class="callout">
+  <strong>MCP 的上下文成本公式：</strong><br>
+  固定成本 = 所有工具的 name + description + parameters schema<br>
+  变动成本 = 每次调用的参数 + 返回值<br><br>
+  关键决策：<strong>固定成本值得付吗？</strong>如果这个 MCP 工具每月只用一次——不值得。如果每天用 10 次——值得。
+</div>
+
+<h2>5. MCP + Skill：它们怎么配合？</h2>
+
+<p>这是你之前可能没想过的一个组合：</p>
+
+<table>
+  <tr><th></th><th>Skill</th><th>MCP 工具</th></tr>
+  <tr><td>作用</td><td>告诉 AI <strong>怎么做</strong>（流程 + 约束）</td><td>给 AI <strong>做事的工具</strong>（能力）</td></tr>
+  <tr><td>类比</td><td>标准操作流程（SOP）</td><td>工具箱里的工具</td></tr>
+  <tr><td>谁管谁</td><td>Skill 的 Procedure 中<strong>调用</strong> MCP 工具</td><td>MCP 工具<strong>被</strong> Skill 命令式调用</td></tr>
+</table>
+
+<p><strong>好 skill = 在正确的步骤调用正确的 MCP 工具。</strong></p>
+
+<pre><code># 一个 skill 步骤中调用 MCP 的实例（伪代码）
+
+### 第 3 步：检查代码质量
+3a. 调用 mcp__ide__getDiagnostics(uri="{当前文件路径}")
+3b. 如果有 error 级别诊断 → 先修复 error，再继续
+3c. 如果只有 warning → 记录到审查意见中，继续</code></pre>
+
+<p>Skill 说「什么时候用」，MCP 说「怎么执行」。这是 <span class="tag tag-skill">Skill</span> + <span class="tag tag-mcp">MCP</span> 的标准配合模式。</p>
+
+<h2>6. 你自己写一个 MCP 工具的场景</h2>
+
+<p>你说「平时让 AI 写 CLI 工具」。下面是你可能会遇到的第一个「应该用 MCP」的信号：</p>
+
+<div class="callout">
+  <strong>信号：</strong>你发现自己在多个 skill 里让 AI 写了<strong>类似但不完全相同的 PS 脚本</strong>，而且偶尔会因为脚本写错而浪费几轮对话来调试。
+  <br><br>
+  <strong>这意味着：</strong>你应该把这个操作封装成一个 MCP 工具。封装一次，所有 skill 直接调用。
+</div>
+
+<details>
+  <summary>🛠 MCP 工具怎么写？（概要）</summary>
+  <div class="answer">
+    <p>一个 MCP 工具就是一段代码 + 一个描述文件。以 Python 为例：</p>
+    <ol>
+      <li>写一个函数，定义输入参数和返回值</li>
+      <li>用 MCP SDK 包装成 tool</li>
+      <li>在 Claude Code 的 <code>.claude/mcp.json</code> 中注册</li>
+    </ol>
+    <p>但你现在不需要自己写——先用好已有的 MCP 工具，感受它们的价值。当「CLI 脚本反复出错」这个信号出现时，再考虑自己写。</p>
+  </div>
+</details>
+
+<h2>7. 练习：有意识地用现有的 MCP 工具</h2>
+
+<div class="highlight-box" style="border: 2px dashed var(--accent); background: #fafaf8; padding: 0.9rem 1.1rem; margin: 1.2rem 0;">
+  <h3 style="margin-top:0; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent);">✏️ 任务</h3>
+  <ol style="margin: 0.4rem 0; font-size: 0.88rem; line-height: 1.6;">
+    <li>打开一个代码文件，故意写一个错误（比如未定义的变量）</li>
+    <li>对我说：「用 MCP 工具检查当前文件的诊断信息」</li>
+    <li>观察 <code>mcp__ide__getDiagnostics</code> 怎么被调用、返回什么</li>
+    <li>然后再对我说：「根据诊断结果，用 MCP 工具执行一段代码来验证」</li>
+    <li>对比：如果不用 MCP，AI 会怎么做？（写 PS 脚本猜测错误）</li>
+  </ol>
+  <p style="margin: 0.3rem 0; font-size: 0.8rem; color: var(--muted);">这就是 MCP 实战——不是搭建服务器，而是有意识地使用已有的 MCP 工具。</p>
+</div>
+
+<h2>8. 关键收获</h2>
+
+<div class="callout">
+  <strong>本课核心：</strong><br>
+  1. <strong>你已经在用 MCP</strong>——ide 的 2 个工具就是 MCP<br>
+  2. <strong>CLI vs MCP 决策树：</strong>跨 skill 复用 → MCP；一次性操作 → CLI<br>
+  3. <strong>MCP 的固定成本是上下文 token</strong>——只为高频操作买单<br>
+  4. <strong>Skill 管流程，MCP 管能力</strong>——好的 skill 在正确的步骤调用正确的 MCP 工具<br>
+  5. <strong>封装 MCP 的信号：</strong>多个 skill 中让 AI 写类似脚本，且脚本反复出错
+</div>
+
+<h2>9. 推荐阅读</h2>
+
+<p>📖 <a href="https://modelcontextprotocol.io/docs/concepts/architecture">MCP 官方文档：Architecture</a> — 理解 MCP 的 client-server 架构，只需读 Architecture 和 Core Concepts 两页。</p>
+
+<p>📖 用 <code>/mcp</code> 命令查看你当前 session 的所有 MCP 工具，看看哪些你从没用过。</p>
+
+<h2>10. 下节课预告</h2>
+
+<p>6 课下来你建立了一套完整的工作流。下一课做一次<strong>综合实战</strong>：用 T-P-G + Context Engineering + 五步闭环 + MCP 决策，从头设计和改进一个 skill——解决你工作中一个真实的代码审查场景。</p>
+
+<div class="nav">
+  <p>
+    ← <a href="0005-skill-development-loop.html">第 5 课：Skill 开发闭环</a>
+  </p>
+  <p style="margin-top: 1.2rem;">
+    ❓ <strong>有问题：</strong>「我现在用的 ide MCP 工具，和数据库 MCP 工具，本质上有区别吗？」「如果我工作中想写一个 MCP 工具，第一步做什么？」
+  </p>
+  <p style="margin-top: 2rem; font-size: 0.8rem; color: #999;">
+    课程 0006 · 基于 <a href="../MISSION.md">Mission: AI 工作流与 Skills 工程设计</a>
+  </p>
+</div>
+
+</body>
+</html>

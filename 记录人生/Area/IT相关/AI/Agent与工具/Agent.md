@@ -11,3 +11,9 @@ date: 2026-05-21
 简单来说：
 
 Agent = [[LLM]] + memory(记忆) + planning skills(规划)+tool use(工具)
+
+## 相关笔记
+
+- [[AI学习路线]] — 返回学习路线总览
+- [[MCP]] — Agent 通过 MCP 接入外部工具
+- [[Skills]] — 另一种工具接入方式

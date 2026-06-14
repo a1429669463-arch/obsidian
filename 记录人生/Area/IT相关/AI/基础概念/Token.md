@@ -20,3 +20,9 @@ date: 2026-05-21
 `API`计费时也是按`Token`进行收费(按照输入，指示文长度，输出长度计算`Token`收费)
 
 [token可视化网站](https://platform.openai.com/tokenizer?utm_source=copilot.com)
+
+## 相关笔记
+
+- [[AI学习路线]] — 返回学习路线总览
+- [[LLM]] — Token 是 LLM 处理文本的基本单位
+- [[Ai幻觉]] — Token 预测的特性导致可能产生幻觉

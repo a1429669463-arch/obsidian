@@ -4,39 +4,24 @@
     "type": "split",
     "children": [
       {
-        "id": "4fd97b0b592e46d6",
+        "id": "20c1609a35cc1545",
         "type": "tabs",
         "children": [
           {
-            "id": "8ea2224559fdadfd",
+            "id": "8af0a9e38406274d",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Projects/FWL/业务属性/レポート種別.レポート種別区分.md",
+                "file": "Area/IT相关/AI/实战/上下文设计原则.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "レポート種別.レポート種別区分"
-            }
-          },
-          {
-            "id": "1082a07129dee9ce",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "無題のファイル.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "無題のファイル"
+              "title": "上下文设计原则"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -68,7 +53,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "skills",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -205,44 +190,45 @@
       "copilot:Open Copilot Chat": false
     }
   },
-  "active": "1082a07129dee9ce",
+  "active": "8af0a9e38406274d",
   "lastOpenFiles": [
-    "Area/IT相关/AI/基础概念/特征学习.md",
-    "Area/IT相关/AI/基础概念/人工神经网络.md",
-    "Area/IT相关/AI/基础概念/机器学习.md",
+    "Area/IT相关/AI/Agent与工具/GitHub Copilot配置体系.md",
+    "Area/IT相关/AI/Agent与工具/Claude-Code-Slash-Commands-斜杠命令.md",
+    "Area/IT相关/AI/基础概念/Copilot 自动搜索与渐进式披露的区别.md",
+    "Area/IT相关/AI/基础概念/渐进式披露.md",
+    "Area/IT相关/AI/Agent与工具/GitHub-Copilot-Slash-Commands-斜杠命令.md",
+    "Area/IT相关/AI/基础概念/Harness Engineering.md",
+    "Area/IT相关/AI/Agent与工具/GitHub-Copilot-Hooks-GitHub-Copilot-Hook事件与配置.md",
+    "00收件箱/GitHub-Copilot-Hooks-GitHub-Copilot-Hook事件与配置.md.tmp.30248.fd3946c2e285",
+    "Area/IT相关/AI/Agent与工具/Claude-Code-Hook-Events-Claude-Code-Hook事件.md",
+    "00收件箱/Claude-Code-Hook-Events-Claude-Code-Hook事件.md",
+    "00收件箱/Claude-Code-Hook-Events-Claude-Code-Hook事件.md.tmp.30248.d9c23d34d90c",
+    "Area/IT相关/AI/Agent与工具/mcp.json-配置指南.md",
+    "Area/IT相关/AI/Agent与工具/mcp.json-配置指南.md.tmp.30248.3c86efd39c08",
+    "HOME.md",
+    "01日记/2026-06-14.md",
     "未命名.canvas",
-    "Projects/FWL/业务属性/画面表示区分.md",
-    "Projects/FWL/业务属性/汎用レポート.md",
-    "Projects/FWL/业务属性/汎用文書(審査有).md",
-    "Projects/FWL/业务属性/汎用目論見書.md",
-    "Projects/FWL/业务属性/レポート種別.レポート種別区分.md",
-    "Projects/FWL/业务实体/レポート種別.md",
-    "Projects/FWL/业务属性/ファンド.償還日.md",
-    "Projects/FWL/业务属性/入力不可能型.md",
-    "Area/IT相关/AI/基础概念/Ai幻觉.md",
-    "Area/IT相关/AI/基础概念/Context Engineering.md",
-    "Projects/FWL/业务实体/ファンド.md",
-    "Projects/FWL/业务实体/運用レポート.md",
-    "Projects/FWL/业务实体/銘柄.md",
-    "深度学习.md",
-    "Projects/FWL/ファンド属性管理画面.md",
-    "Area/IT相关/ss.md",
-    "Projects/FWL/本番リリース手順.md",
-    "Projects/FWL/业务属性",
-    "Area/IT相关/AI/实战/Excel转换Markdown skills制作经验.md",
-    "Area/IT相关/AI/实战/Excel转换markdown工作流思考.md",
-    "Projects/FWL/业务实体/販売レポート.md",
-    "Projects/FWL/业务实体",
-    "Projects/FWL/千手申請.md",
-    "ゼノブレイド２攻略~F1896.tmp",
-    "ゼノブレイド２攻略~EA8BA.tmp",
-    "Projects/异度之刃2/战斗机制.md",
-    "ゼノブレイド２攻略~E2DA5.tmp",
-    "Projects/异度之刃2/融合连击构筑思路.md",
-    "Projects/异度之刃2",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~CB9C3.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~72655.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~F39F1.tmp",
-    "01游戏攻略/异度之刃/ゼノブレイドDE_任务管理.~DABCF.tmp"
+    "Area/IT相关/AI/实战/上下文设计原则.md",
+    "Area/IT相关/AI/实战/上下文设计原则.md.tmp.30248.3f12fb1a3aeb",
+    "Area/IT相关/AI/实战/TPG-Skill质量评估三角.md",
+    "00收件箱/TPG-Skill质量评估三角.md",
+    "00收件箱/TPG-Skill质量评估三角.md.tmp.30248.3bd7b4cf39fd",
+    "skills-lock.json",
+    "Area/IT相关/AI/Agent与工具/Claude Code配置体系.md",
+    "CLAUDE.md",
+    "CLAUDE.md.tmp.5616.3b053842040f",
+    "Area/IT相关/AI/Agent与工具/GitHub-Copilot-Slash-Commands-斜杠命令.md.tmp.5616.970d302e91c8",
+    "Area/IT相关/AI/Agent与工具/GitHub-Copilot-Slash-Commands-斜杠命令.md.tmp.5616.2febe98b1d47",
+    "Area/IT相关/AI/Agent与工具/GitHub-Copilot-Slash-Commands-斜杠命令.md.tmp.5616.b8e6af70c8ab",
+    "00收件箱/Claude Code Hooks.md",
+    "00收件箱/WebSocket-WebSocket协议.md",
+    "00收件箱/CC-Hooks-Claude Code钩子系统.md",
+    "00收件箱/WebSocket.md",
+    "00收件箱/Microservices-微服务架构.md",
+    "00收件箱/微服务架构.md",
+    "Area/IT相关/Apache/httpd.conf.md",
+    "Area/IT相关/Apache/HTTP.md",
+    "Area/IT相关/Apache/Apache.md",
+    "00收件箱/未命名.canvas"
   ]
 }

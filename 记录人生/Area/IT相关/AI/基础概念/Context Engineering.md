@@ -14,3 +14,10 @@ Context Engineering 主要关注“在每一次模型调用时，应该把哪些
 ## 相关技术
 
  [[渐进式披露]]
+
+## 相关笔记
+
+- [[AI学习路线]] — 返回学习路线总览
+- [[Prompt Engineering]] — 与 Context Engineering 互补的技能
+- [[Harness Engineering]] — 更上层的系统设计视角
+- [[上下文]] — 被管理的对象

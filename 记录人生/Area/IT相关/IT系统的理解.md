@@ -13,3 +13,12 @@ date: 2026-05-15
 
 https://www.cnblogs.com/flashsun/p/9450066.html
 https://cloud.tencent.com/developer/article/2381869
+
+## 相关领域
+
+- [[AI学习路线|AI]] — AI 正在改变系统设计的范式
+- [[Apache]] — Web 服务器，系统架构的入口层
+- [[GIT]] — 代码版本管理，系统的记录系统
+- [[Sql|SQL]] — 数据持久化的基础
+- [[EXCEL概览|EXCEL]] — 业务系统中常见的数据载体
+- [[FWL]] — 以数据为核心的实际业务系统案例

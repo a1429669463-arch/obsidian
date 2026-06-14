@@ -39,4 +39,8 @@ python -m pip install --no-index --find-links=wheelhouse -r requirements.txt
 - Python 版本一致
     
 - Windows 位数一致，例如都是 64 位
+
+## 相关笔记
+
+- [[pip配置]] — pip 代理和默认源配置
     

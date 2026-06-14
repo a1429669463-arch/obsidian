@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 3 课：T-P-G 实战解剖 — 以 teach skill 为例</title>
+<style>
+  :root {
+    --text: #1a1a1a; --muted: #555; --accent: #c44; --bg: #fefefe;
+    --code-bg: #f4f2f0; --border: #e0ddd8; --highlight: #fff8e1;
+    --good-bg: #f0fff2; --warn-bg: #fffbf0; --bad-bg: #fff0f0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: Georgia, "Noto Serif CJK SC", "Source Han Serif SC", serif;
+    color: var(--text); background: var(--bg);
+    line-height: 1.75; max-width: 700px; margin: 0 auto; padding: 3rem 1.5rem 6rem;
+  }
+  h1 { font-size: 1.7rem; line-height: 1.3; margin-bottom: 0.3rem; font-family: -apple-system, "PingFang SC", sans-serif; }
+  h2 { font-size: 1.2rem; margin: 2.5rem 0 0.75rem; padding-top: 1rem; border-top: 1px solid var(--border); font-family: -apple-system, "PingFang SC", sans-serif; }
+  h3 { font-size: 1rem; margin: 1.5rem 0 0.5rem; font-family: -apple-system, "PingFang SC", sans-serif; }
+  p { margin: 0.75rem 0; }
+  .subtitle { color: var(--muted); font-size: 1rem; margin-bottom: 0.5rem; font-style: italic; }
+  .meta { font-size: 0.85rem; color: var(--muted); margin-bottom: 2.5rem; }
+  .meta span { margin-right: 1.5rem; }
+
+  .callout {
+    margin: 1.5rem 0; padding: 1rem 1.2rem;
+    border-left: 3px solid var(--accent); background: var(--highlight);
+    border-radius: 0 4px 4px 0; font-size: 0.95rem;
+  }
+  .callout strong { color: var(--accent); }
+
+  pre {
+    background: var(--code-bg); padding: 0.8rem 1rem; border-radius: 5px;
+    overflow-x: auto; font-size: 0.83rem; line-height: 1.55; margin: 1rem 0;
+    border: 1px solid var(--border);
+  }
+  code { font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace; font-size: 0.88em; }
+  pre code { font-size: 0.83rem; }
+
+  details {
+    margin: 1rem 0; padding: 0.8rem 1rem;
+    background: #fafaf8; border: 1px solid var(--border); border-radius: 5px;
+  }
+  details summary {
+    cursor: pointer; font-weight: 600;
+    font-family: -apple-system, "PingFang SC", sans-serif; color: var(--accent);
+  }
+  details summary:hover { text-decoration: underline; }
+  details .answer { margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px dashed var(--border); }
+
+  /* Scorecard */
+  .scorecard {
+    margin: 1.2rem 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+  }
+  .scorecard .row {
+    display: flex; align-items: baseline; padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--border); font-size: 0.9rem;
+  }
+  .scorecard .row:last-child { border-bottom: none; }
+  .scorecard .dim {
+    width: 90px; flex-shrink: 0; font-weight: 700;
+    font-family: -apple-system, "PingFang SC", sans-serif; font-size: 0.85rem;
+  }
+  .scorecard .verdict {
+    width: 52px; flex-shrink: 0; text-align: center;
+    font-weight: 700; font-size: 0.85rem;
+  }
+  .scorecard .detail { flex: 1; color: var(--muted); font-size: 0.85rem; }
+  .good-row { background: var(--good-bg); }
+  .warn-row { background: var(--warn-bg); }
+  .bad-row  { background: var(--bad-bg); }
+  .verdict-good { color: #2a2; }
+  .verdict-warn { color: #c90; }
+  .verdict-bad  { color: #c44; }
+
+  /* Comparison table */
+  .compare-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.87rem; }
+  .compare-table th {
+    text-align: left; padding: 0.5rem 0.6rem; border-bottom: 2px solid var(--border);
+    font-size: 0.78rem; color: var(--muted);
+  }
+  .compare-table td { padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .compare-table tr:nth-child(even) td { background: #fcfcfa; }
+
+  .tag {
+    display: inline-block; font-size: 0.7rem; padding: 0.1em 0.45em; border-radius: 3px;
+    margin-right: 0.3em; font-weight: 600;
+  }
+  .tag-t { background: #e8f0fe; color: #36c; }
+  .tag-p { background: #e6f4ea; color: #1a7; }
+  .tag-g { background: #fce8e6; color: #c44; }
+
+  .nav { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.9rem; color: var(--muted); }
+  .nav a { color: var(--accent); }
+
+  .highlight-box {
+    border: 2px solid var(--accent); border-radius: 6px; padding: 0.3rem 0.8rem;
+    margin: 1rem 0; background: #fff5f5;
+  }
+</style>
+</head>
+<body>
+
+<h1>第 3 课：T-P-G 实战解剖</h1>
+<p class="subtitle">以 teach skill 为案例，逐项打分的完整分析</p>
+<p class="meta">
+  <span>📅 2026-06-14</span>
+  <span>⏱ ~20 分钟</span>
+  <span>← <a href="0002-skill-dispatch-and-composition.html">第 2 课</a></span>
+</p>
+
+<h2>1. 你的观察是对的——先修正 T2</h2>
+
+<p>你看了「名人写的 skills」，发现他们没有显式排除条件。这让你怀疑 T2 的必要性。</p>
+
+<p><strong>你的怀疑是健康的。</strong></p>
+
+<p>回头看 T-P-G 检查清单中的 T2：</p>
+
+<div class="highlight-box">
+  <p style="margin: 0.5rem 0;"><strong>旧 T2：</strong>「是否列出了<strong>不触发</strong>的情况？」——至少 1 个排除条件</p>
+</div>
+
+<p>这个表述太窄了。修正如下：</p>
+
+<div class="highlight-box">
+  <p style="margin: 0.5rem 0;"><strong>新 T2：</strong>「触发条件的<strong>特异性</strong>是否足够防止误触发？用的是什么机制？」</p>
+</div>
+
+<p>实现触发特异性有 <strong>4 种机制</strong>，显式排除只是其中之一：</p>
+
+<table class="compare-table">
+  <tr><th>机制</th><th>原理</th><th>谁在用</th><th>可靠度</th></tr>
+  <tr>
+    <td><strong>机制 1：窄描述</strong></td>
+    <td>description 本身足够窄和具体，自然不和别的 skill 重叠</td>
+    <td>feynman-test（「用费曼学习法测试」— 独特场景）</td>
+    <td>⭐⭐⭐</td>
+  </tr>
+  <tr>
+    <td><strong>机制 2：disable-model-invocation</strong></td>
+    <td>完全绕过 AI 匹配，只能通过显式 <code>/command</code> 触发</td>
+    <td><strong>teach</strong>（本 skill！）</td>
+    <td>⭐⭐⭐⭐⭐</td>
+  </tr>
+  <tr>
+    <td><strong>机制 3：领域专有词汇</strong></td>
+    <td>用独特术语，不会被日常对话意外命中</td>
+    <td>「ZPD」「费曼」「Harness Engineering」</td>
+    <td>⭐⭐⭐⭐</td>
+  </tr>
+  <tr>
+    <td><strong>机制 4：显式排除</strong></td>
+    <td>在 description 中写「不触发于…」</td>
+    <td>feynman-test（「普通的 XX 是什么 不触发」）</td>
+    <td>⭐⭐⭐⭐</td>
+  </tr>
+</table>
+
+<div class="callout">
+  <strong>核心原则：</strong>目标是「该来的时候来，不该来的时候别来」。至于用什么手段实现，看场景。不要把 T-P-G 当成教条——它是诊断工具，不是法律条文。
+</div>
+
+<h2>2. 案例解剖：teach SKILL.md</h2>
+
+<p>现在我们把这个 132 行的 skill，用 T-P-G 三角逐项打分。这是你自己的学习空间里的 skill，你每天都在看它运行。</p>
+
+<h3>2.1 Trigger Precision — 触发精度</h3>
+
+<p>看 frontmatter：</p>
+
+<pre><code>name: teach
+description: Teach the user a new skill or concept, within this workspace.
+disable-model-invocation: true       ← 关键！
+argument-hint: "What would you like to learn about?"</code></pre>
+
+<div class="scorecard">
+  <div class="row good-row">
+    <span class="dim"><span class="tag tag-t">T1</span> 触发具体</span>
+    <span class="verdict verdict-good">✅ 好</span>
+    <span class="detail">「Teach a new skill or concept, within this workspace」— 场景清晰，不模糊</span>
+  </div>
+  <div class="row good-row">
+    <span class="dim"><span class="tag tag-t">T2</span> 防误触发</span>
+    <span class="verdict verdict-good">✅ 极好</span>
+    <span class="detail"><strong>用了机制 2：</strong><code>disable-model-invocation: true</code> — AI 永远不会自动匹配这个 skill，只有用户显式输入 <code>/teach</code> 才触发。这比任何排除条件都强。</span>
+  </div>
+  <div class="row good-row">
+    <span class="dim"><span class="tag tag-t">T3</span> 无歧义重叠</span>
+    <span class="verdict verdict-good">✅ 好</span>
+    <span class="detail">「teach」这个名字没有其他 skill 用。如果有个 skill 也叫类似名字（比如「tutor」「instruct」），就会有重叠风险。</span>
+  </div>
+  <div class="row warn-row">
+    <span class="dim"><span class="tag tag-t">T4</span> 变体覆盖</span>
+    <span class="verdict verdict-warn">⚠️ 略弱</span>
+    <span class="detail">用户不说 <code>/teach</code> 而是说「教我 XX」「我想学 YY」时不会触发——但这是故意的，因为 <code>disable-model-invocation</code> 本身就是「只有显式调用才触发」的设计选择。</span>
+  </div>
+</div>
+
+<details>
+  <summary>🔍 <code>disable-model-invocation: true</code> 是什么意思？</summary>
+  <div class="answer">
+    <p>这是 Claude Code 的 skill frontmatter 字段。默认情况下，AI 可以根据 description 自行判断是否调用一个 skill。加上这个字段后，AI <strong>永远不会主动调用</strong>这个 skill——它只能通过用户显式输入 <code>/teach</code> 来触发。</p>
+    <p>这意味着 teach skill 的「触发判断」完全由用户（人）来做，而非 AI。这是 <strong>最强的 Trigger Precision</strong>——消除了所有 AI 误判的可能。</p>
+    <p><strong>代价</strong>：用户如果不主动输入 <code>/teach</code>，这个 skill 永远不会被触发，即使上下文完全适合用它。</p>
+  </div>
+</details>
+
+<h3>2.2 Procedure Clarity — 流程清晰度</h3>
+
+<p>teach skill 的结构不是线性的「第 1 步 → 第 2 步」，而是一组<strong>原则和规范</strong>。这是有意为之的设计选择——教学不是流水线，不能机械执行。</p>
+
+<div class="scorecard">
+  <div class="row warn-row">
+    <span class="dim"><span class="tag tag-p">P1</span> 原子动作</span>
+    <span class="verdict verdict-warn">⚠️ 模糊</span>
+    <span class="detail">没有「第 1 步 / 第 2 步」的线性流程。Agent 需要自行判断该看哪个 section。这不是缺点——教学本身就非线性——但会导致 Agent 行为不够一致。</span>
+  </div>
+  <div class="row warn-row">
+    <span class="dim"><span class="tag tag-p">P2</span> 动词可执行</span>
+    <span class="verdict verdict-warn">⚠️ 混合</span>
+    <span class="detail">有些动词很具体（「Read their learning-records」「Create a lesson」），有些很模糊（「should be designed」「should be used to ground」）。</span>
+  </div>
+  <div class="row warn-row">
+    <span class="dim"><span class="tag tag-p">P3</span> 输入输出</span>
+    <span class="verdict verdict-warn">⚠️ 隐含</span>
+    <span class="detail">lesson 的格式（HTML 结构）、learning record 的格式有详细规定，但没有说「读到 MISSION.md 后输出什么」。</span>
+  </div>
+  <div class="row warn-row">
+    <span class="dim"><span class="tag tag-p">P4</span> 决策分支</span>
+    <span class="verdict verdict-warn">⚠️ 依赖判断</span>
+    <span class="detail">「If the user is unclear about the mission, your first job should be to question the user...」— 这是一个分支，但判断「unclear」完全依赖 Agent 的主观判断。</span>
+  </div>
+  <div class="row warn-row">
+    <span class="dim"><span class="tag tag-p">P5</span> 引用精确</span>
+    <span class="verdict verdict-good">✅ 好</span>
+    <span class="detail">引用都用了完整的相对路径：<code>[MISSION-FORMAT.md](./MISSION-FORMAT.md)</code>、<code>[LEARNING-RECORD-FORMAT.md](./LEARNING-RECORD-FORMAT.md)</code>。</span>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>Procedure 的诊断不是「好/坏」的二元判断。</strong> teach skill 的 Procedure Clarity 看起来「弱」，但这是<strong>有意为之</strong>：教学需要灵活性，过度约束反而会让课程变得机械。关键在于<strong>你知道这个 trade-off 并接受它</strong>。
+</div>
+
+<h3>2.3 Guardrails — 护栏完整度</h3>
+
+<p>这是 teach skill 的强项。虽然 Procedure 比较松散，但护栏很多：</p>
+
+<pre><code># 从 skill 原文中提取的护栏（非连续，仅为示例）
+
+"Never trust your parametric knowledge."
+"Confirm with the user before changing the mission."
+"Push back on vagueness."
+"A bad mission is worse than no mission."
+"Keep it short."
+"Respect it." (指用户不加入社区的偏好)
+"Prune ruthlessly."
+"If the user cannot articulate why, interview them before writing anything."</code></pre>
+
+<div class="scorecard">
+  <div class="row good-row">
+    <span class="dim"><span class="tag tag-g">G1</span> 绝对禁止</span>
+    <span class="verdict verdict-good">✅ 强</span>
+    <span class="detail">「Never trust your parametric knowledge」— 极强的硬约束，明确告知 Agent 不能用训练数据凑答案。</span>
+  </div>
+  <div class="row good-row">
+    <span class="dim"><span class="tag tag-g">G2</span> 信息不足</span>
+    <span class="verdict verdict-good">✅ 好</span>
+    <span class="detail">「If the user cannot articulate why, interview them before writing anything」— 信息不足时向用户获取，而非猜测。</span>
+  </div>
+  <div class="row warn-row">
+    <span class="dim"><span class="tag tag-g">G3</span> 失败恢复</span>
+    <span class="verdict verdict-warn">⚠️ 缺失</span>
+    <span class="detail">如果 lesson HTML 写坏了怎么办？如果格式文件读取失败怎么办？没有明确的恢复策略。</span>
+  </div>
+  <div class="row good-row">
+    <span class="dim"><span class="tag tag-g">G4</span> 输出格式</span>
+    <span class="verdict verdict-good">✅ 强</span>
+    <span class="detail">每种文件的格式都有独立的 FORMAT.md 参考文件，结构规定得很细。</span>
+  </div>
+  <div class="row good-row">
+    <span class="dim"><span class="tag tag-g">G5</span> 确认节点</span>
+    <span class="verdict verdict-good">✅ 好</span>
+    <span class="detail">「Confirm with the user before changing the mission」— 不可逆操作前需要用户确认。</span>
+  </div>
+</div>
+
+<h2>3. 综合诊断</h2>
+
+<div class="scorecard">
+  <div class="row good-row">
+    <span class="dim"><strong>Trigger</strong></span>
+    <span class="verdict verdict-good">★★★★★</span>
+    <span class="detail"><code>disable-model-invocation</code> + 窄描述，几乎不可能误触发</span>
+  </div>
+  <div class="row warn-row">
+    <span class="dim"><strong>Procedure</strong></span>
+    <span class="verdict verdict-warn">★★★☆☆</span>
+    <span class="detail">有意保持灵活，但代价是 Agent 行为可能不够一致</span>
+  </div>
+  <div class="row good-row">
+    <span class="dim"><strong>Guardrails</strong></span>
+    <span class="verdict verdict-good">★★★★☆</span>
+    <span class="detail">约束丰富，但缺少失败恢复策略</span>
+  </div>
+</div>
+
+<p><strong>teach skill 的设计哲学是：</strong>用极强 Trigger（防误入）+ 丰富 Guardrails（防乱做）来<strong>补偿</strong>宽松的 Procedure。这是一个合理的工程设计 trade-off——当任务本质上不适合机械流程时，你可以选择「收紧两端，放松中间」。</p>
+
+<div class="callout">
+  <strong>这就是 T-P-G 框架的真正用法：</strong>不是追求三角都满分，而是<strong>理解每个 skill 的 trade-off，并确保弱的那一角有其他两个兜底</strong>。
+</div>
+
+<h2>4. 对比：两种设计哲学</h2>
+
+<table class="compare-table">
+  <tr>
+    <th></th>
+    <th>study-note（你的 skill）</th>
+    <th>teach（本 skill）</th>
+  </tr>
+  <tr>
+    <td><span class="tag tag-t">T</span> Trigger</td>
+    <td>基于 description 匹配，有排除条件</td>
+    <td><code>disable-model-invocation</code>，只靠 <code>/teach</code></td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-p">P</span> Procedure</td>
+    <td>线性 6 步流程，每步有明确动作</td>
+    <td>非线性的原则和规范集合</td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-g">G</span> Guardrails</td>
+    <td>检查清单 + 验证步骤</td>
+    <td>丰富的禁令和建议</td>
+  </tr>
+  <tr>
+    <td><strong>适合场景</strong></td>
+    <td>确定性任务（创建笔记有模板）</td>
+    <td>不确定性任务（教学需要灵活）</td>
+  </tr>
+  <tr>
+    <td><strong>设计哲学</strong></td>
+    <td>弱 T + 强 P + 强 G<br>「我知道你会被正确触发，但我用流程和护栏确保你做对」</td>
+    <td>强 T + 弱 P + 强 G<br>「我限制进入条件，之后给你自由度，但用护栏兜底」</td>
+  </tr>
+</table>
+
+<h2>5. 练习：用修正后的 T-P-G 评估你自己的 skill</h2>
+
+<details>
+  <summary>✏️ 练习 1：重评 study-note 的 Trigger</summary>
+  <div class="answer">
+    <p>用新 T2 标准（「特异性是否足够？用什么机制？」）重新评估 study-note：</p>
+    <ol>
+      <li>它用的是<strong>机制 4（显式排除）</strong>吗？——没有显式排除条件</li>
+      <li>它用的是<strong>机制 1（窄描述）</strong>吗？——「学习」「了解」「研究」「创建笔记」覆盖面很广，不算窄</li>
+      <li>它和 feynman-test 有重叠吗？——有。用户说「帮我学习 X」应该触发 study-note，但如果 X 是已有笔记，feynman-test 也可能被触发</li>
+    </ol>
+    <p><strong>改进方向</strong>：考虑加入显式排除，如「不触发于：用户要求测试已有知识的理解程度（用 feynman-test）」。</p>
+  </div>
+</details>
+
+<details>
+  <summary>✏️ 练习 2：诊断 procedure 的 trade-off</summary>
+  <div class="answer">
+    <p>teach skill 的 Procedure 偏弱，但这是有意的。想一个问题：</p>
+    <p><strong>如果强行把 teach skill 写成线性流程（第 1 步→第 2 步→…），会出什么问题？</strong></p>
+    <p>可能的答案：</p>
+    <ul>
+      <li>第 1 步永远是「检查 MISSION.md」——但如果 MISSION.md 不存在呢？（已经写了分支处理）</li>
+      <li>课程创建在不同阶段取决于不同情况，线性流程会让简单场景变复杂</li>
+      <li>教学中的「判断 ZPD」本质上需要 Agent 的灵活性，机械流程做不好</li>
+    </ul>
+    <p>结论：<strong>有些 skill 的任务本质就是非线性的——不是设计缺陷，是领域特征。</strong></p>
+  </div>
+</details>
+
+<h2>6. 关键收获</h2>
+
+<div class="callout">
+  <strong>本课核心：</strong><br>
+  1. <strong>T-P-G 是诊断工具，不是评分标准</strong>——不需要三角满分，需要知道哪里弱、怎么补偿<br>
+  2. <strong>排除条件只是 4 种 Trigger Precision 机制之一</strong>——<code>disable-model-invocation</code> 更强<br>
+  3. <strong>Procedure 弱不一定是 bug</strong>——如果任务本质非线性，用 Trigger + Guardrails 补偿<br>
+  4. <strong>看别人的 skill 时，不要只找「有没有排除条件」，要看「它是怎么解决误触发问题的」</strong>
+</div>
+
+<h2>7. 推荐阅读</h2>
+
+<p>📖 重新看一遍 teach SKILL.md（在 <code>.claude/skills/teach/SKILL.md</code>），这次带着打分的心态去读——你会发现之前没注意到的设计细节。</p>
+
+<p>📖 找一个你工作中用到的 Copilot skill，用修正后的 T-P-G 框架给它打分。尤其关注：它用什么机制防误触发？</p>
+
+<h2>8. 下节课预告</h2>
+
+<p>接下来回到你的核心问题：<strong>Context Engineering — 「给 AI 什么信息才算好？」</strong>你会学到判断一段上下文是「有用信息」还是「噪音」的具体方法。</p>
+
+<div class="nav">
+  <p>
+    ← <a href="0002-skill-dispatch-and-composition.html">第 2 课：Skill 调度与组合</a> ·
+    <a href="../reference/skill-design-checklist.html">📋 Skill 设计检查清单</a>
+  </p>
+  <p style="margin-top: 1.5rem;">
+    ❓ <strong>直接问我</strong>：「teach skill 的 G3（失败恢复）该怎么补？」「我的 study-note 要不要加 <code>disable-model-invocation</code>？」
+  </p>
+  <p style="margin-top: 2rem; font-size: 0.8rem; color: #999;">
+    课程 0003 · 基于 <a href="../MISSION.md">Mission: AI 工作流与 Skills 工程设计</a>
+  </p>
+</div>
+
+</body>
+</html>

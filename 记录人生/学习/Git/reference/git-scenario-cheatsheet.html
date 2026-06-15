@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git 场景速查表</title>
+<style>
+  :root { --text: #1a1a1a; --muted: #555; --accent: #c44; --bg: #fefefe; --code-bg: #f5f2f0; --border: #e0e0e0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "SF Mono", "Fira Code", "Consolas", "Menlo", monospace;
+    color: var(--text); background: var(--bg); line-height: 1.6; font-size: 14px;
+    max-width: 800px; margin: 0 auto; padding: 1.5rem 1.5rem 3rem;
+  }
+  h1 { font-family: "Palatino Linotype", Palatino, serif; font-size: 1.6rem; margin-bottom: .25rem; }
+  h2 { font-family: "Palatino Linotype", Palatino, serif; font-size: 1.15rem; margin: 2rem 0 .75rem; border-bottom: 1px solid var(--border); padding-bottom: .25rem; }
+  .subtitle { color: var(--muted); font-size: .85rem; margin-bottom: 1.5rem; }
+  .entry { display: grid; grid-template-columns: 2fr 3fr; gap: .5rem; padding: .55rem 0; border-bottom: 1px solid #f0f0f0; align-items: baseline; }
+  .entry .cmd { font-weight: 600; }
+  .entry .desc { color: var(--muted); font-size: .9rem; }
+  code { background: var(--code-bg); padding: .15em .4em; border-radius: 2px; font-size: .95em; }
+  .note { color: var(--muted); font-size: .85rem; font-style: italic; margin: .5rem 0 1rem; }
+  a { color: var(--accent); }
+  footer { color: var(--muted); font-size: .8rem; margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+  @media print { body { font-size: 12px; max-width: 100%; } .entry { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<h1>Git 场景速查表</h1>
+<p class="subtitle">覆盖第 1 课的命令 · 持续更新中 · <a href="../lessons/0001-git-ignore-and-untrack.html">← 返回第 1 课</a></p>
+
+<h2>文件忽略与取消跟踪</h2>
+
+<div class="entry">
+  <div class="cmd"><code>echo "file" &gt;&gt; .gitignore</code></div>
+  <div class="desc">忽略从未跟踪过的文件（Untracked 文件专用）</div>
+</div>
+<div class="entry">
+  <div class="cmd"><code>git update-index --skip-worktree &lt;file&gt;</code></div>
+  <div class="desc">忽略<strong>已跟踪文件</strong>的本地修改（git status 不再显示）</div>
+</div>
+<div class="entry">
+  <div class="cmd"><code>git update-index --no-skip-worktree &lt;file&gt;</code></div>
+  <div class="desc">恢复：让 Git 重新关注这个文件的修改</div>
+</div>
+<div class="entry">
+  <div class="cmd"><code>git ls-files -v | grep '^S'</code></div>
+  <div class="desc">查看所有被 skip-worktree 标记的文件（S=skip, h=assume-unchanged）</div>
+</div>
+<div class="entry">
+  <div class="cmd"><code>git rm --cached &lt;file&gt;</code></div>
+  <div class="desc">永久停止跟踪文件（保留本地副本）。之后需加 .gitignore</div>
+</div>
+
+<h2>决策：该用哪个？</h2>
+<div class="note">
+  git status 看到文件 → Untracked? → .gitignore<br>
+  git status 看到文件 → modified? → skip-worktree（临时）或 rm --cached（永久）
+</div>
+
+<footer>
+  <p>打印友好 · 适合贴在显示器旁边</p>
+</footer>
+</body>
+</html>

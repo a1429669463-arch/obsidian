@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 1 课：本地改了文件，如何不让 Git 跟踪</title>
+<style>
+  :root {
+    --text: #1a1a1a;
+    --muted: #555;
+    --accent: #c44;
+    --bg: #fefefe;
+    --code-bg: #f5f2f0;
+    --border: #e0e0e0;
+    --note-bg: #fffbe6;
+    --note-border: #f0d050;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "ET Book", "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    color: var(--text); background: var(--bg);
+    line-height: 1.7; font-size: 18px;
+    max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem;
+  }
+  h1 { font-size: 2rem; margin: 0 0 .25rem; font-weight: 700; }
+  h2 { font-size: 1.35rem; margin: 2.5rem 0 .75rem; font-weight: 700; border-bottom: 1px solid var(--border); padding-bottom: .25rem; }
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 .5rem; font-weight: 700; }
+  p { margin: 0 0 1rem; }
+  .subtitle { color: var(--muted); font-size: 1rem; margin-bottom: 1.5rem; }
+  .sidenote { float: right; clear: right; width: 180px; margin-right: -210px; font-size: .82rem; color: var(--muted); line-height: 1.4; }
+  @media (max-width: 1000px) { .sidenote { float: none; width: auto; margin: .25rem 0; display: block; } }
+
+  pre { background: var(--code-bg); border-radius: 4px; padding: .85rem 1rem; overflow-x: auto; margin: .75rem 0 1.25rem; font-size: .88rem; line-height: 1.6; border: 1px solid var(--border); }
+  code { font-family: "SF Mono", "Fira Code", "Consolas", monospace; font-size: .88em; background: var(--code-bg); padding: .1em .3em; border-radius: 2px; }
+  pre code { background: none; padding: 0; border-radius: 0; }
+
+  .scenario { background: #f0f7ff; border-left: 4px solid #4a90d9; padding: .85rem 1rem; margin: 1rem 0 1.5rem; border-radius: 0 4px 4px 0; font-size: .95rem; }
+  .scenario strong { color: #2a6cb6; }
+
+  .note { background: var(--note-bg); border-left: 4px solid var(--note-border); padding: .85rem 1rem; margin: 1rem 0; border-radius: 0 4px 4px 0; font-size: .92rem; }
+
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: .92rem; }
+  th, td { border: 1px solid var(--border); padding: .55rem .75rem; text-align: left; }
+  th { background: #f8f8f8; font-weight: 600; }
+  td:first-child code { white-space: nowrap; }
+
+  .quiz { background: #fafafa; border: 1px solid var(--border); border-radius: 6px; padding: 1.25rem; margin: 1.5rem 0; }
+  .quiz h3 { margin-top: 0; font-size: 1rem; }
+  .quiz label { display: block; margin: .4rem 0 .4rem 1.5rem; cursor: pointer; }
+  .quiz input[type="radio"] { margin-right: .4rem; }
+  .quiz button { margin-top: .75rem; padding: .45rem 1.2rem; font-size: .9rem; background: var(--accent); color: #fff; border: none; border-radius: 4px; cursor: pointer; font-family: inherit; }
+  .quiz button:hover { opacity: .88; }
+  .feedback { margin-top: .75rem; padding: .6rem .85rem; border-radius: 4px; display: none; font-size: .92rem; }
+  .feedback.correct { background: #e6f7e6; display: block; }
+  .feedback.wrong { background: #fde8e8; display: block; }
+
+  .counter { color: var(--muted); font-size: .85rem; }
+  .tag { display: inline-block; background: #eee; padding: .1em .5em; border-radius: 3px; font-size: .8rem; margin-right: .3rem; }
+  a { color: var(--accent); }
+  hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0 1rem; }
+  footer { color: var(--muted); font-size: .85rem; margin-top: 2rem; }
+</style>
+</head>
+<body>
+
+<h1>第 1 课：本地改了文件，如何不让 Git 跟踪</h1>
+<p class="subtitle"><span class="tag">文件管理</span> <span class="tag">场景驱动</span> <span class="counter">约 20 分钟</span></p>
+
+<p>你有没有过这种时刻——</p>
+
+<blockquote class="scenario">
+<strong>真实场景：</strong>项目里有个配置文件（比如数据库连接、本地端口号），你为了在本地跑起来改了几行，但不想把这个改动提交到仓库里。每次 <code>git status</code> 都看到它红彤彤地躺在那里，烦人又危险，怕手滑 <code>git add .</code> 把它也带上去了。
+</blockquote>
+
+<p>这个问题分<strong>两种情况</strong>，解法完全不同。让我们先分清楚你面对的是哪一种。</p>
+
+<h2>快速判断：你的文件属于哪种情况？</h2>
+
+<table>
+  <tr><th>情况</th><th>判断方式</th><th>文件状态</th><th>解法</th></tr>
+  <tr>
+    <td><strong>A. 从未跟踪</strong></td>
+    <td><code>git status</code> 显示为 "Untracked files"</td>
+    <td>Git 根本不认识这个文件</td>
+    <td><code>.gitignore</code></td>
+  </tr>
+  <tr>
+    <td><strong>B. 已在跟踪</strong></td>
+    <td><code>git status</code> 显示为 "modified: xxx"</td>
+    <td>Git 已经在版本库中记录了这个文件</td>
+    <td><code>git update-index --skip-worktree</code></td>
+  </tr>
+</table>
+
+<p>跑一下 <code>git status</code> 看看你的文件在哪一栏，然后跳到对应章节。</p>
+
+<h2>情况 A：文件从未被跟踪 → .gitignore</h2>
+
+<p>如果你看到的文件名在 <code>Untracked files:</code> 下面，恭喜你，这是最简单的场景。</p>
+
+<pre><code># 把文件名或模式写入 .gitignore
+echo "config.local.js" &gt;&gt; .gitignore
+
+# .gitignore 本身需要提交，这是项目的公共规则
+git add .gitignore
+git commit -m "忽略本地配置文件"</code></pre>
+
+<div class="note">
+<strong>常见误区：</strong>.gitignore 只对 <em>从未被跟踪过的文件</em> 生效。如果文件已经被 Git 跟踪了（情况 B），写到 .gitignore 里完全不管用。这也是为什么很多人搜答案搜到 .gitignore 然后发现没有效果——他们的文件已经被跟踪了。
+</div>
+
+<h2>情况 B：文件已在跟踪 → skip-worktree</h2>
+
+<p>如果文件已经在 Git 的版本库里了（你或别人之前提交过它），你需要的是 <code>--skip-worktree</code>。</p>
+
+<pre><code># 告诉 Git：「这个文件我本地可能会改，你别管它」
+git update-index --skip-worktree &lt;文件名&gt;
+
+# 效果：git status 不会再显示它的修改
+# 你的本地修改不会被 git add / git reset --hard 意外带走</code></pre>
+
+<p>以后想恢复跟踪：</p>
+
+<pre><code>git update-index --no-skip-worktree &lt;文件名&gt;</code></pre>
+
+<p>查看当前有哪些文件被标记了：</p>
+
+<pre><code>git ls-files -v | grep '^S'
+# S = skip-worktree（你打的标记）
+# h = assume-unchanged（另一种标记，见下文）</code></pre>
+
+<h3>那 --assume-unchanged 呢？</h3>
+
+<p>你可能在搜索时也看到过 <code>--assume-unchanged</code>。两者的区别：</p>
+
+<table>
+  <tr><th></th><th>--assume-unchanged</th><th>--skip-worktree ✅</th></tr>
+  <tr><td>设计目的</td><td>性能优化（跳过慢文件系统的检查）</td><td><strong>真正忽略本地修改</strong></td></tr>
+  <tr><td>git status 不显示修改</td><td>✅</td><td>✅</td></tr>
+  <tr><td>git reset --hard</td><td>❌ 会覆盖你的本地修改</td><td>✅ 不会覆盖</td></tr>
+  <tr><td>切换分支</td><td>❌ 可能报错阻止切换</td><td>✅ 平滑切换</td></tr>
+</table>
+
+<div class="note">
+<strong>结论：</strong>想忽略本地修改 → 用 <code>--skip-worktree</code>，忘了 assume-unchanged 吧。后者是给文件系统慢的大型仓库做性能优化的，不是用来"忽略修改"的。
+</div>
+
+<h2>情况 B 的变体：我想彻底停止跟踪，但保留本地文件</h2>
+
+<p>如果你不仅想忽略本地修改，还想让 Git 从此彻底不再跟踪这个文件（但磁盘上保留它）：</p>
+
+<pre><code># 从 Git 索引中移除，但保留本地文件
+git rm --cached &lt;文件名&gt;
+
+# 然后加到 .gitignore，确保以后不会再被跟踪
+echo "&lt;文件名&gt;" &gt;&gt; .gitignore
+
+# 提交这个"取消跟踪"操作
+git commit -m "停止跟踪 &lt;文件名&gt;"</code></pre>
+
+<p>之后其他人在 pull 这次提交时，文件会从他们的 Git 跟踪中移除，但注意——<strong>他们本地的文件副本也会被删掉</strong>。团队协作时慎用，提前沟通。</p>
+
+<h2>场景决策树</h2>
+
+<pre><code>
+git status 看到文件改了，不想提交
+│
+├─ 文件在 "Untracked files" 下？
+│   └─ 是 → 写入 .gitignore
+│
+├─ 文件在 "modified:" 下？
+│   ├─ 短期内都要忽略 → git update-index --skip-worktree &lt;file&gt;
+│   └─ 永久停止跟踪       → git rm --cached &lt;file&gt; + 写入 .gitignore
+│
+└─ 你只想这次 commit 不包含它，下次还正常跟踪
+    └─ git add &lt;具体文件&gt; 而不要用 git add .  (这是选文件提交，不是忽略)
+</code></pre>
+
+<hr>
+
+<h2>动手练习</h2>
+
+<div class="quiz" id="q1">
+<h3>练习 1：判断场景</h3>
+<p>你的项目有一个 <code>db.config.json</code>，它从项目一开始就在仓库里。现在你在本地改了数据库端口号以便调试，但不希望这个改动被 Git 跟踪或意外提交。应该用什么命令？</p>
+<label><input type="radio" name="q1" value="a"> 把 db.config.json 加到 .gitignore</label>
+<label><input type="radio" name="q1" value="b"> git update-index --skip-worktree db.config.json</label>
+<label><input type="radio" name="q1" value="c"> git rm db.config.json</label>
+<label><input type="radio" name="q1" value="d"> git update-index --assume-unchanged db.config.json</label>
+<button onclick="checkQ1()">提交</button>
+<div class="feedback" id="q1fb"></div>
+</div>
+
+<div class="quiz" id="q2">
+<h3>练习 2：补充命令</h3>
+<p>你想查看当前仓库里有哪些文件被 skip-worktree 标记了，命令是：</p>
+<p><code>git ls-files _____ | grep '^S'</code></p>
+<p>横线处应该填什么？在终端里试试看。</p>
+<label><input type="radio" name="q2" value="a"> -a</label>
+<label><input type="radio" name="q2" value="b"> -s</label>
+<label><input type="radio" name="q2" value="c"> -v</label>
+<label><input type="radio" name="q2" value="d"> -l</label>
+<button onclick="checkQ2()">提交</button>
+<div class="feedback" id="q2fb"></div>
+</div>
+
+<div class="quiz" id="q3">
+<h3>练习 3：真实操作</h3>
+<p>在你的 Git 仓库（比如当前的 Obsidian vault）中，找一个已经被跟踪的文件，执行：</p>
+<ol>
+  <li><code>git update-index --skip-worktree &lt;文件&gt;</code></li>
+  <li>修改它</li>
+  <li>跑 <code>git status</code> 验证修改不显示</li>
+  <li>用 <code>git ls-files -v | grep '^S'</code> 确认标记</li>
+  <li>执行 <code>git update-index --no-skip-worktree &lt;文件&gt;</code> 恢复</li>
+  <li>再跑 <code>git status</code> 确认修改重新可见</li>
+</ol>
+<p>做完后在终端里确认每一步的效果。</p>
+</div>
+
+<hr>
+
+<h2>本节要点</h2>
+
+<ul>
+  <li><code>.gitignore</code> 只对 <strong>未跟踪文件</strong> 生效，已跟踪文件加了也没用</li>
+  <li>已跟踪文件想忽略本地修改 → <code>git update-index --skip-worktree &lt;file&gt;</code></li>
+  <li>永久停止跟踪但保留本地文件 → <code>git rm --cached &lt;file&gt;</code> + <code>.gitignore</code></li>
+  <li>用 <code>git ls-files -v | grep '^S'</code> 查看所有被标记的文件</li>
+</ul>
+
+<h2>推荐阅读</h2>
+
+<ul>
+  <li><a href="https://git-scm.com/docs/git-update-index">git update-index 官方文档</a> — 了解 --skip-worktree 和 --assume-unchanged 的原始定义</li>
+  <li><a href="https://stackoverflow.com/questions/13630849/git-difference-between-assume-unchanged-and-skip-worktree">Stack Overflow: assume-unchanged vs skip-worktree</a> — 社区讨论两种标记的实际区别</li>
+  <li><a href="../reference/git-scenario-cheatsheet.html">参考：Git 场景速查表</a> — 本课的浓缩版，随时回来翻</li>
+</ul>
+
+<hr>
+<footer>
+<p>有问题？直接在这个对话里问我。比如：</p>
+<ul>
+  <li>"skip-worktree 和 assume-unchanged 能同时设置吗？"</li>
+  <li>"如果别人更新了这个文件，我 pull 下来会怎样？"</li>
+  <li>"我怎么知道哪些文件被标记了 skip-worktree？"</li>
+</ul>
+<p style="margin-top:1rem;"><a href="0001-git-ignore-and-untrack.html">← 第 1 课</a> · 第 2 课（即将发布）→ · <a href="../reference/git-scenario-cheatsheet.html">📋 速查表</a></p>
+</footer>
+
+<script>
+function checkQ1() {
+  var fb = document.getElementById('q1fb');
+  var selected = document.querySelector('input[name="q1"]:checked');
+  if (!selected) { fb.className = 'feedback wrong'; fb.textContent = '请先选一个选项。'; return; }
+  if (selected.value === 'b') {
+    fb.className = 'feedback correct';
+    fb.textContent = '✅ 正确！文件已经在仓库里，.gitignore 不管用，需要用 skip-worktree。虽然 d 也能产生类似效果，但 skip-worktree 才是这类场景的正确选择（git reset --hard 不会覆盖你的修改）。';
+  } else {
+    fb.className = 'feedback wrong';
+    if (selected.value === 'a') fb.textContent = '❌ .gitignore 只对从未跟踪过的文件生效。db.config.json 已经在仓库里了，加了 .gitignore 也没用。';
+    else if (selected.value === 'c') fb.textContent = '❌ git rm 会从 Git 中删除文件。用 git rm --cached 可以不删本地文件，但那是永久停止跟踪，不是临时的"忽略本次修改"。';
+    else fb.textContent = '⚠️ assume-unchanged 也能隐藏修改，但它是为性能优化设计的。git reset --hard 会覆盖你的修改，切换分支也可能报错。skip-worktree 才是正解。';
+  }
+}
+function checkQ2() {
+  var fb = document.getElementById('q2fb');
+  var selected = document.querySelector('input[name="q2"]:checked');
+  if (!selected) { fb.className = 'feedback wrong'; fb.textContent = '请先选一个选项。'; return; }
+  if (selected.value === 'c') {
+    fb.className = 'feedback correct';
+    fb.textContent = '✅ 正确！-v 表示 verbose，会在文件列表前显示标记位（S 或 h）。';
+  } else {
+    fb.className = 'feedback wrong';
+    fb.textContent = '❌ 不对。你可以在终端里试试 git ls-files -v 和其他选项的区别。';
+  }
+}
+</script>
+</body>
+</html>

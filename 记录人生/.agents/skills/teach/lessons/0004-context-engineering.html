@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 4 课：Context Engineering — 给 AI 什么信息才算好？</title>
+<style>
+  :root {
+    --text: #1a1a1a; --muted: #555; --accent: #c44; --bg: #fefefe;
+    --code-bg: #f4f2f0; --border: #e0ddd8; --highlight: #fff8e1;
+    --good-bg: #f0fff2; --warn-bg: #fffbf0; --bad-bg: #fff0f0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: Georgia, "Noto Serif CJK SC", "Source Han Serif SC", serif;
+    color: var(--text); background: var(--bg);
+    line-height: 1.75; max-width: 700px; margin: 0 auto; padding: 3rem 1.5rem 6rem;
+  }
+  h1 { font-size: 1.7rem; line-height: 1.3; margin-bottom: 0.3rem; font-family: -apple-system, "PingFang SC", sans-serif; }
+  h2 { font-size: 1.2rem; margin: 2.2rem 0 0.7rem; padding-top: 1rem; border-top: 1px solid var(--border); font-family: -apple-system, "PingFang SC", sans-serif; }
+  h3 { font-size: 1rem; margin: 1.3rem 0 0.4rem; font-family: -apple-system, "PingFang SC", sans-serif; }
+  p { margin: 0.7rem 0; }
+  .subtitle { color: var(--muted); font-size: 1rem; margin-bottom: 0.3rem; font-style: italic; }
+  .meta { font-size: 0.85rem; color: var(--muted); margin-bottom: 2.2rem; }
+  .meta span { margin-right: 1.5rem; }
+
+  .callout {
+    margin: 1.3rem 0; padding: 0.9rem 1.1rem;
+    border-left: 3px solid var(--accent); background: var(--highlight);
+    border-radius: 0 4px 4px 0; font-size: 0.93rem;
+  }
+  .callout strong { color: var(--accent); }
+
+  pre {
+    background: var(--code-bg); padding: 0.75rem 0.95rem; border-radius: 5px;
+    overflow-x: auto; font-size: 0.82rem; line-height: 1.5; margin: 0.9rem 0;
+    border: 1px solid var(--border);
+  }
+  code { font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace; font-size: 0.87em; }
+  pre code { font-size: 0.82rem; }
+
+  details {
+    margin: 0.9rem 0; padding: 0.75rem 0.95rem;
+    background: #fafaf8; border: 1px solid var(--border); border-radius: 5px;
+  }
+  details summary {
+    cursor: pointer; font-weight: 600;
+    font-family: -apple-system, "PingFang SC", sans-serif; color: var(--accent);
+  }
+  details summary:hover { text-decoration: underline; }
+  details .answer { margin-top: 0.55rem; padding-top: 0.55rem; border-top: 1px dashed var(--border); }
+
+  /* Before/After comparison */
+  .compare-block { display: flex; gap: 0.8rem; margin: 1rem 0; flex-wrap: wrap; }
+  .compare-block > div { flex: 1; min-width: 260px; padding: 0.8rem 0.95rem; border-radius: 5px; font-size: 0.87rem; }
+  .before { background: #fff5f5; border: 1px solid #fcc; }
+  .after  { background: #f5fff5; border: 1px solid #cfc; }
+  .before h4 { color: #b33; font-family: -apple-system, "PingFang SC", sans-serif; margin-bottom: 0.4rem; font-size: 0.85rem; }
+  .after h4  { color: #2a2; font-family: -apple-system, "PingFang SC", sans-serif; margin-bottom: 0.4rem; font-size: 0.85rem; }
+
+  .highlight-box {
+    border: 2px solid var(--accent); border-radius: 6px; padding: 0.3rem 0.8rem;
+    margin: 1rem 0; background: #fff5f5;
+  }
+
+  table { width: 100%; border-collapse: collapse; margin: 0.9rem 0; font-size: 0.86rem; }
+  th { text-align: left; padding: 0.4rem 0.5rem; border-bottom: 2px solid var(--border); font-size: 0.77rem; color: var(--muted); }
+  td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: #fcfcfa; }
+
+  .nav { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.9rem; color: var(--muted); }
+  .nav a { color: var(--accent); }
+
+  .tag {
+    display: inline-block; font-size: 0.7rem; padding: 0.1em 0.45em; border-radius: 3px;
+    margin-right: 0.3em; font-weight: 600;
+  }
+  .tag-pattern { background: #e8f0fe; color: #36c; }
+  .tag-bad { background: #fce4ec; color: #c62828; }
+  .tag-good { background: #e8f5e9; color: #2e7d32; }
+</style>
+</head>
+<body>
+
+<h1>第 4 课：Context Engineering</h1>
+<p class="subtitle">给 AI 什么信息才算好？——不是越多越好，而是越「密」越好</p>
+<p class="meta">
+  <span>📅 2026-06-14</span>
+  <span>⏱ ~25 分钟</span>
+  <span>← <a href="0003-tpg-case-study-teach-skill.html">第 3 课</a></span>
+</p>
+
+<h2>1. 你的原始问题</h2>
+
+<p>在第一节课前，你说了这句话：</p>
+
+<div class="callout">
+  <strong>「我知道要给 AI 设计合适的上下文，但是提供怎样的信息才算好呢？」</strong>
+</div>
+
+<p>前 3 课建立了 T-P-G 框架，但没有直接回答这个问题。现在是时候了。</p>
+
+<p>答案可以浓缩成一句话：</p>
+
+<div class="highlight-box">
+  <p style="margin: 0.65rem 0; font-size: 1.05rem;"><strong>好的上下文 = 每一条信息都在收窄 AI 的选择空间。删掉任何一条，AI 都会变得更不确定。</strong></p>
+</div>
+
+<p>接下来把这句话拆成可操作的方法。</p>
+
+<h2>2. 上下文预算测试（Context Budget Test）</h2>
+
+<p>对于你想放进 skill 的<strong>每一条信息</strong>，问自己：</p>
+
+<div class="highlight-box">
+  <p style="margin: 0.6rem 0; font-size: 1rem;"><strong>删掉这一条，AI 还能做对吗？</strong></p>
+  <p style="margin: 0; font-size: 0.9rem; color: var(--muted);">能 → 删掉它。它是噪音。<br>不能 → 留下。但再问：能不能用更少的字说清楚？</p>
+</div>
+
+<p>现在用这个测试来审视 study-note skill 的实际内容：</p>
+
+<div class="compare-block">
+  <div class="before">
+    <h4>❌ 没通过测试</h4>
+    <p style="margin: 0.3rem 0; font-size: 0.84rem;">「核心理念：一个文件一个概念，通过 [[wikilink]] 自由连接；每条知识可追溯来源，不确定之处坦诚标注。」</p>
+    <p style="margin: 0; font-size: 0.82rem; color: var(--muted);">→ 这是一段<strong>理念阐述</strong>，删掉它 AI 仍然能从操作步骤中推断出来。它不提供 AI 做决策需要的增量信息。</p>
+  </div>
+  <div class="after">
+    <h4>✅ 通过测试</h4>
+    <p style="margin: 0.3rem 0; font-size: 0.84rem;">「文件名格式：<code>&lt;英文&gt;-&lt;中文&gt;.md</code>」</p>
+    <p style="margin: 0; font-size: 0.82rem; color: var(--muted);">→ 删掉这条 AI 就<strong>不知道</strong>文件名该怎么起。它直接收窄了 AI 在命名时的选择空间。</p>
+  </div>
+</div>
+
+<details>
+  <summary>🔍 为什么理念阐述是噪音？</summary>
+  <div class="answer">
+    <p>AI 不需要被「说服」或「教育」。它需要一个<strong>决策约束</strong>。</p>
+    <p>「每条知识可追溯来源」并不能告诉 AI 怎么做——是加脚注？是加「参考文献」节？是每段后面加链接？</p>
+    <p>而「<code>## 参考文献</code> 节，含至少 1 个 <code>[标题](URL)</code> 格式链接」就能。前者是理念，后者是指令。</p>
+    <p><strong>规则：如果你的话不能直接转化为一个 AI 可执行的动作，那它大概率是噪音。</strong></p>
+  </div>
+</details>
+
+<h2>3. 信息密度：不是看字多少，是看「约束密度」</h2>
+
+<p>比较两段上下文，同样是告诉 AI 怎么写代码审查意见：</p>
+
+<div class="compare-block">
+  <div class="before">
+    <h4>❌ 低密度（26 词，0 约束）</h4>
+    <p style="font-size: 0.84rem;">「在审查代码时，你应该仔细分析代码的逻辑和结构，确保代码质量符合团队标准，并且给出有帮助的建议。你的意见应该清晰、具体、可操作。」</p>
+  </div>
+  <div class="after">
+    <h4>✅ 高密度（22 词，4 约束）</h4>
+    <p style="font-size: 0.84rem;">「每条意见包含：①具体行号 ②问题类型（bug/风格/性能）③建议的修改方案。不写『可以考虑』『也许可以』。」</p>
+  </div>
+</div>
+
+<p>左边字数更多，但<strong>信息密度为零</strong>——AI 读完不知道自己该做什么。右边字数更少，但每句话都是一个具体的约束。</p>
+
+<div class="callout">
+  <strong>评估上下文的公式：</strong><br>
+  信息密度 = 可执行约束数 ÷ token 数<br><br>
+  高密度上下文：每 10-20 个 token 就有一个明确约束<br>
+  低密度上下文：一段话过去，AI 没有任何新决策信息
+</div>
+
+<h2>4. Context 设计的四种模式</h2>
+
+<p>好的上下文不是一种东西——它根据用途分为四类。设计 skill 时这四类可以组合使用：</p>
+
+<table>
+  <tr><th>模式</th><th>是什么</th><th>例子</th><th>何时用</th></tr>
+  <tr>
+    <td><span class="tag tag-pattern">约束指令</span></td>
+    <td>AI 必须遵守的操作规则</td>
+    <td>「不写 `可以考虑`」「`## 参考文献` 必含 1 个 URL」</td>
+    <td><strong>最常用</strong>。任何 skill 的核心上下文都是这类。</td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-pattern">格式模板</span></td>
+    <td>输出的精确结构</td>
+    <td>「frontmatter 包含 date 和 tags」「文件名：EN-CN.md」</td>
+    <td>输出格式有明确要求时。注意：模板本身不是约束，是约束的<strong>载体</strong>。</td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-pattern">正反例</span></td>
+    <td>一个具体的「这样做」+「不要这样做」</td>
+    <td>「✅ `const x = 1` ❌ `var x = 1`」</td>
+    <td>约束容易有歧义时。一个例子抵三段描述。</td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-pattern">环境信息</span></td>
+    <td>关于当前环境的事实，帮 AI 适配输出</td>
+    <td>「此 vault 用 Obsidian」「目标读者是中级开发者」</td>
+    <td>任务需要根据环境做不同决策时。注意：环境信息<strong>不能替代约束</strong>。</td>
+  </tr>
+</table>
+
+<details>
+  <summary>🔍 四种模式的优先级——首要投入在哪里？</summary>
+  <div class="answer">
+    <p>按投入产出比排序：</p>
+    <ol>
+      <li><strong>约束指令</strong> — 这是地基。没有明确约束，其他三种模式白费。</li>
+      <li><strong>正反例</strong> — 当约束有歧义时，加例子是最高效的消歧方式。</li>
+      <li><strong>格式模板</strong> — 只在格式确实重要时用。很多 skill 不需要模板。</li>
+      <li><strong>环境信息</strong> — 用最少的字说。1-2 句通常够了。</li>
+    </ol>
+    <p>很多 skill 的问题是：环境信息写了很多，约束指令不够具体。</p>
+  </div>
+</details>
+
+<h2>5. 渐进式披露：你已经在用，但可以更刻意</h2>
+
+<p>你的 study-note skill 已经用了渐进式披露：</p>
+
+<pre><code>## 何时读取参考文件
+- 需要详细规则 → 读 `references/note-rules.md`
+- 需要目录结构 → 读 `references/vault-structure.md`
+- 需要模板 → 读 `templates/note-template.md`</code></pre>
+
+<p>这很好——不是一股脑把所有参考文件灌给 AI，而是<strong>按需加载</strong>。但可以更进一步：</p>
+
+<div class="compare-block">
+  <div class="before">
+    <h4>❌ 当前：按条件加载</h4>
+    <p style="font-size: 0.83rem;">「需要命名规则时读 X」「需要模板时读 Y」— AI 需要自己判断「现在是不是需要读 X」。</p>
+  </div>
+  <div class="after">
+    <h4>✅ 改进：按步骤加载</h4>
+    <p style="font-size: 0.83rem;">「第 0 步：读 vault-structure.md → 确定目录位置<br>第 4 步：读 note-template.md → 填充模板<br>第 5 步：读 note-rules.md → 逐项自检」</p>
+  </div>
+</div>
+
+<p>区别：条件式加载把「要不要读」的判断交给了 AI（增加不确定性）；步骤式加载把读取动作绑定到具体步骤（消除不确定性）。</p>
+
+<div class="callout">
+  <strong>渐进式披露的核心原则：</strong>不是在「该读的时候」让 AI 读，而是在「唯一正确的时机」<strong>命令</strong> AI 读。
+</div>
+
+<h2>6. 诊断自己 skill 的上下文质量</h2>
+
+<p>用这个 4 步诊断法检查任何 skill 的上下文：</p>
+
+<table>
+  <tr><th>步骤</th><th>诊断动作</th><th>信号</th></tr>
+  <tr>
+    <td>1</td>
+    <td>逐句做<strong>预算测试</strong></td>
+    <td>删掉这句 AI 还能做对吗？能 → 删</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>找<strong>模糊形容词</strong></td>
+    <td>「合适的」「清晰的」「好的」「仔细的」— 这些词不给 AI 任何决策信息</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>数<strong>可执行约束</strong></td>
+    <td>skill 里有多少条「必须 / 不得 / 用 X 做 Y」？少于 5 条 → 太松</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>查<strong>信息缺口</strong></td>
+    <td>AI 在做某个关键决策时，skill 中有对应的约束吗？没有 → 这是缺口</td>
+  </tr>
+</table>
+
+<h2>7. 练习：修剪一段臃肿上下文</h2>
+
+<div class="highlight-box">
+  <p style="margin: 0.5rem 0; font-size: 0.9rem;"><strong>练习：</strong>下面是一段 skill 中的上下文。用预算测试和信息密度分析，找出哪些该删、哪些该改、有没有信息缺口。</p>
+</div>
+
+<pre><code>在帮助用户进行代码审查时，你应该充当一个经验丰富的代码审查者。
+你需要仔细阅读代码，理解代码的意图和上下文。
+确保你提出的每一条意见都是有价值的，能真正帮助开发者改进代码质量。
+意见应该涵盖代码的正确性、可读性、性能和安全性等方面。
+在写意见时，请保持建设性和专业性，语气友好、尊重开发者。
+如果代码中有多个问题，请按严重程度排列，优先指出最严重的问题。</code></pre>
+
+<details>
+  <summary>🔍 诊断结果（先自己想想再点开）</summary>
+  <div class="answer">
+    <table>
+      <tr><th>原文</th><th>诊断</th><th>处理</th></tr>
+      <tr>
+        <td>「充当一个经验丰富的代码审查者」</td>
+        <td>角色设定，不提供约束</td>
+        <td>🗑️ 删</td>
+      </tr>
+      <tr>
+        <td>「仔细阅读代码，理解代码的意图」</td>
+        <td>AI 默认就会做，说了等于没说</td>
+        <td>🗑️ 删</td>
+      </tr>
+      <tr>
+        <td>「意见应该有价值，真正帮助改进」</td>
+        <td>模糊形容词，无约束</td>
+        <td>🗑️ 删</td>
+      </tr>
+      <tr>
+        <td>「涵盖正确性、可读性、性能、安全」</td>
+        <td>给出了审查维度，有约束力</td>
+        <td>✅ 保留，但可以更具体</td>
+      </tr>
+      <tr>
+        <td>「建设性和专业性，语气友好」</td>
+        <td>软约束，价值有限</td>
+        <td>⚠️ 改写成：「不写『你错了』，写『这里可能会……』」</td>
+      </tr>
+      <tr>
+        <td>「按严重程度排列」</td>
+        <td>具体约束</td>
+        <td>✅ 保留</td>
+      </tr>
+    </table>
+    <p><strong>修剪后（从 186 字 → 约 70 字，约束密度翻倍）：</strong></p>
+    <pre><code>审查维度：正确性、可读性、性能、安全性。
+每条意见包含：具体行号 + 问题类型 + 建议改动。
+不写「你错了」→ 写「这里可能会[后果]」。
+多个问题时按严重程度排序。</code></pre>
+  </div>
+</details>
+
+<h2>8. 关键收获</h2>
+
+<div class="callout">
+  <strong>本课核心：</strong><br>
+  1. <strong>上下文预算测试：</strong>删掉这句 AI 还能做对吗？能 → 删<br>
+  2. <strong>信息密度 = 可执行约束 ÷ token 数</strong>——质量远比数量重要<br>
+  3. <strong>四种模式按优先级：</strong>约束指令 > 正反例 > 格式模板 > 环境信息<br>
+  4. <strong>渐进式披露的精髓：</strong>不是「需要时读」，是「在某一步<strong>必须</strong>读」<br>
+  5. <strong>模糊形容词是噪音信号：</strong>「合适的」「清晰的」「好的」→ 全删
+</div>
+
+<h2>9. 推荐阅读</h2>
+
+<p>📖 打开你的 study-note SKILL.md，用今天的 4 步诊断法逐句检查一遍。你有多少句通过了预算测试？有多少模糊形容词？</p>
+
+<p>📖 <a href="https://docs.anthropic.com/en/docs/build-with-claude/context-windows">Anthropic: Context Windows 文档</a> — 官方对上下文管理的技术指南。</p>
+
+<h2>10. 下节课预告</h2>
+
+<p>下一课聚焦 <strong>Harness Engineering 实战</strong>：从概念到应用——如何把 T-P-G 和 Context Engineering 串成一个完整的 skill 开发流程。</p>
+
+<div class="nav">
+  <p>
+    ← <a href="0003-tpg-case-study-teach-skill.html">第 3 课：T-P-G 实战解剖</a> ·
+    <a href="../reference/skill-design-checklist.html">📋 Skill 设计检查清单</a>
+  </p>
+  <p style="margin-top: 1.5rem;">
+    ❓ <strong>有问题直接问：</strong>「我 study-note 里有哪句没通过预算测试？」「四种模式里，我的 feynman-test 缺少哪种？」
+  </p>
+  <p style="margin-top: 2rem; font-size: 0.8rem; color: #999;">
+    课程 0004 · 基于 <a href="../MISSION.md">Mission: AI 工作流与 Skills 工程设计</a>
+  </p>
+</div>
+
+</body>
+</html>

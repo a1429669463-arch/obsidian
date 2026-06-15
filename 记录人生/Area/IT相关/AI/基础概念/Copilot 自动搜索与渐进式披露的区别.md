@@ -19,3 +19,9 @@ Copilot 在 VS Code 中可以通过 workspace search、semantic search、grep �
 任务类型 → 必读资料 → 使用工具 → 验证方式
 
 因此，它不是替代 Copilot 的搜索能力，而是给搜索能力加上方向、优先级和约束。
+
+## 相关笔记
+
+- [[AI学习路线]] — 返回学习路线总览
+- [[渐进式披露]] — 被对比的核心概念
+- [[Context Engineering]] — 更上层的上下文管理视角

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skill 设计检查清单</title>
+<style>
+  :root {
+    --text: #1a1a1a;
+    --muted: #555;
+    --accent: #c44;
+    --bg: #fefefe;
+    --border: #e0ddd8;
+    --stripe: #fafaf7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Noto Sans SC", sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+  h1 { font-size: 1.5rem; margin-bottom: 0.2rem; }
+  .subtitle { color: var(--muted); margin-bottom: 2rem; font-size: 0.9rem; }
+  h2 { font-size: 1.1rem; margin: 1.8rem 0 0.6rem; padding-bottom: 0.3rem; border-bottom: 2px solid var(--accent); }
+  table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.9rem; }
+  th { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 2px solid var(--border); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+  td { padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: var(--stripe); }
+  .check { color: #2a2; font-weight: bold; }
+  .warn { color: #c90; font-weight: bold; }
+  .fail { color: #c44; font-weight: bold; }
+  .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 0.1em 0.4em;
+    border-radius: 3px;
+    margin-right: 0.3em;
+    font-weight: 600;
+  }
+  .tag-t { background: #e8f0fe; color: #36c; }
+  .tag-p { background: #e6f4ea; color: #1a7; }
+  .tag-g { background: #fce8e6; color: #c44; }
+  .note { font-size: 0.85rem; color: var(--muted); margin: 0.5rem 0; font-style: italic; }
+  @media print {
+    body { font-size: 11pt; padding: 1rem; }
+    h1 { font-size: 16pt; }
+    table { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>📋 Skill 设计检查清单</h1>
+<p class="subtitle">用 T-P-G 三角快速诊断任何 skill · 搭配 <a href="../lessons/0001-skill-quality-framework.html">第 1 课</a> 使用</p>
+
+<h2><span class="tag tag-t">T</span> Trigger Precision 触发精度</h2>
+<table>
+  <tr><th>#</th><th>检查项</th><th>判断标准</th></tr>
+  <tr><td>T1</td><td>触发条件是否<strong>具体</strong>？</td><td>包含具体的用户意图描述词（如「学习」「检验」），而非笼统的「用户需要帮助时」</td></tr>
+  <tr><td>T2</td><td>触发<strong>特异性</strong>是否足够防误触发？用了什么机制？</td><td>4 种机制之一：(1)窄描述 (2)disable-model-invocation (3)领域专有词汇 (4)显式排除条件。不要求一定有(4)。</td></tr>
+  <tr><td>T3</td><td>和其他 skill 的触发条件<strong>无歧义重叠</strong>？</td><td>两个 skill 不会同时匹配同一条用户请求（或明确写了优先级）</td></tr>
+  <tr><td>T4</td><td>用户不精确表达时<strong>仍能触发</strong>？</td><td>覆盖了常见变体说法（如用户不说「费曼」但说「考考我」）</td></tr>
+</table>
+
+<h2><span class="tag tag-p">P</span> Procedure Clarity 流程清晰度</h2>
+<table>
+  <tr><th>#</th><th>检查项</th><th>判断标准</th></tr>
+  <tr><td>P1</td><td>每一步是否只有<strong>一个明确动作</strong>？</td><td>不能「搜索并分析并整理」——拆成独立子步骤</td></tr>
+  <tr><td>P2</td><td>动词是否<strong>可执行</strong>？</td><td>用具体工具/操作（Grep、Write、AskUserQuestion）替代模糊动词（分析、处理、整理）</td></tr>
+  <tr><td>P3</td><td>每步的<strong>输入和输出</strong>是否明确？</td><td>上一步的输出 = 下一步的输入，中间没有「AI 自己看着办」的黑箱</td></tr>
+  <tr><td>P4</td><td>决策分支是否<strong>有明确条件</strong>？</td><td>「如果 X 则做 Y，否则做 Z」——条件不是 AI 自行判断，而是客观可验证的</td></tr>
+  <tr><td>P5</td><td>引用外部文档时，<strong>指向是否精确</strong>？</td><td>「读 references/note-rules.md 第 3 节」优于「参考参考资料」</td></tr>
+</table>
+
+<h2><span class="tag tag-g">G</span> Guardrails 护栏完整度</h2>
+<table>
+  <tr><th>#</th><th>检查项</th><th>判断标准</th></tr>
+  <tr><td>G1</td><td>有没有<strong>绝对禁止</strong>的操作？</td><td>「永远不要 X」「不得 Y」——硬约束，不可逾越</td></tr>
+  <tr><td>G2</td><td>信息/工具不足时<strong>怎么办</strong>？</td><td>明确写了兜底行为：问用户？跳过？标记待确认？</td></tr>
+  <tr><td>G3</td><td>步骤失败时<strong>如何恢复</strong>？</td><td>有重试策略或降级方案（如「搜索无结果 → 换关键词再搜一次 → 仍无结果则告知用户」）</td></tr>
+  <tr><td>G4</td><td>有没有<strong>输出格式约束</strong>？</td><td>明确规定了输出结构、格式、必须包含和不能包含的内容</td></tr>
+  <tr><td>G5</td><td>有没有<strong>用户确认节点</strong>？</td><td>不可逆操作（写入文件、修改配置）之前有用户确认步骤</td></tr>
+</table>
+
+<h2>快速诊断口诀</h2>
+<p style="font-size: 1.05rem; line-height: 2; margin: 1rem 0; padding: 1rem; background: var(--stripe); border-radius: 5px;">
+  <strong>触发要精准</strong>——该来的来，不该来的别来<br>
+  <strong>动作要原子</strong>——一步一动作，动词可执行<br>
+  <strong>护栏要兜底</strong>——最蠢的情况也有预案<br>
+  <strong>输出要明确</strong>——AI 知道「做到哪里算完」
+</p>
+
+<p class="note">打印版本：本页设计为打印友好，可直接打印成纸质 checklist 使用。</p>
+
+</body>
+</html>

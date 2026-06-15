@@ -24,3 +24,7 @@ date: 2026-05-20
 [[git reset]]
 
 [[git checkout]]
+
+## 相关笔记
+
+- [[GIT]] — 返回 Git 总览

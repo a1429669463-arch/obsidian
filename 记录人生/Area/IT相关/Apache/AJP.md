@@ -24,3 +24,9 @@ Apache 可以通过以下形式配置转发到后端地址：
 ```apache
 ProxyPass /app ajp://localhost:8009/app
 ProxyPass /app http://localhost:8080/app
+
+## 相关笔记
+
+- [[Apache]] — 返回 Apache 总览
+- [[反向代理]] — AJP 常用于反向代理场景
+- [[HTTP]] — 与 AJP 对比的协议

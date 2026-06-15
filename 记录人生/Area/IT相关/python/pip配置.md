@@ -78,3 +78,8 @@ python -m pip install six --proxy "http://用户名:密码@代理地址:端口"
 :  -> %3A
 空格 -> %20
 ```
+
+## 相关笔记
+
+- [[wheel包]] — 离线安装用 wheel 包准备方法
+- [[命令一覧表]] — PowerShell 命令参考（pip 常在 PowerShell 中运行）

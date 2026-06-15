@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 2 课：Skill 调度与组合 — 多个 skill 如何共处</title>
+<style>
+  :root {
+    --text: #1a1a1a; --muted: #555; --accent: #c44; --bg: #fefefe;
+    --code-bg: #f4f2f0; --border: #e0ddd8; --highlight: #fff8e1;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: Georgia, "Noto Serif CJK SC", "Source Han Serif SC", serif;
+    color: var(--text); background: var(--bg);
+    line-height: 1.75; max-width: 700px; margin: 0 auto; padding: 3rem 1.5rem 6rem;
+  }
+  h1 { font-size: 1.7rem; line-height: 1.3; margin-bottom: 0.3rem; font-family: -apple-system, "PingFang SC", sans-serif; }
+  h2 { font-size: 1.2rem; margin: 2.5rem 0 0.75rem; padding-top: 1rem; border-top: 1px solid var(--border); font-family: -apple-system, "PingFang SC", sans-serif; }
+  h3 { font-size: 1rem; margin: 1.5rem 0 0.5rem; font-family: -apple-system, "PingFang SC", sans-serif; }
+  p { margin: 0.75rem 0; }
+  .subtitle { color: var(--muted); font-size: 1rem; margin-bottom: 0.5rem; font-style: italic; }
+  .meta { font-size: 0.85rem; color: var(--muted); margin-bottom: 2.5rem; }
+  .meta span { margin-right: 1.5rem; }
+
+  .callout {
+    margin: 1.5rem 0; padding: 1rem 1.2rem;
+    border-left: 3px solid var(--accent); background: var(--highlight);
+    border-radius: 0 4px 4px 0; font-size: 0.95rem;
+  }
+  .callout strong { color: var(--accent); }
+
+  pre {
+    background: var(--code-bg); padding: 0.9rem 1.1rem; border-radius: 5px;
+    overflow-x: auto; font-size: 0.84rem; line-height: 1.55; margin: 1rem 0;
+    border: 1px solid var(--border);
+  }
+  code { font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace; font-size: 0.88em; }
+  pre code { font-size: 0.84rem; }
+
+  details {
+    margin: 1rem 0; padding: 0.8rem 1rem;
+    background: #fafaf8; border: 1px solid var(--border); border-radius: 5px;
+  }
+  details summary {
+    cursor: pointer; font-weight: 600;
+    font-family: -apple-system, "PingFang SC", sans-serif; color: var(--accent);
+  }
+  details summary:hover { text-decoration: underline; }
+  details .answer { margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px dashed var(--border); }
+
+  /* Scene diagrams */
+  .scene {
+    background: #fafaf8; border: 1px solid var(--border); border-radius: 6px;
+    padding: 1rem 1.2rem; margin: 1rem 0; font-size: 0.9rem;
+  }
+  .scene .label {
+    display: inline-block; font-size: 0.7rem; padding: 0.1em 0.5em; border-radius: 3px;
+    font-weight: 600; font-family: -apple-system, "PingFang SC", sans-serif;
+    margin-right: 0.4em; vertical-align: middle;
+  }
+  .label-user { background: #e3f2fd; color: #1565c0; }
+  .label-sys  { background: #e8f5e9; color: #2e7d32; }
+  .label-prob { background: #fce4ec; color: #c62828; }
+  .label-ok   { background: #e8f5e9; color: #2e7d32; }
+
+  .diagram {
+    margin: 1.5rem 0; padding: 1rem 1.2rem;
+    background: #fff; border: 1px solid var(--border); border-radius: 6px;
+    font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    font-size: 0.8rem; line-height: 1.7; white-space: pre;
+    overflow-x: auto;
+  }
+
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+  th { text-align: left; padding: 0.4rem 0.5rem; border-bottom: 2px solid var(--border); font-size: 0.78rem; color: var(--muted); }
+  td { padding: 0.45rem 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: #fcfcfa; }
+
+  .tag {
+    display: inline-block; font-size: 0.7rem; padding: 0.1em 0.45em; border-radius: 3px;
+    margin-right: 0.3em; font-weight: 600;
+  }
+  .tag-t { background: #e8f0fe; color: #36c; }
+  .tag-p { background: #e6f4ea; color: #1a7; }
+  .tag-g { background: #fce8e6; color: #c44; }
+  .tag-new { background: #f3e5f5; color: #7b1fa2; }
+
+  .nav { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.9rem; color: var(--muted); }
+  .nav a { color: var(--accent); }
+
+  .quiz-option {
+    display: block; padding: 0.5rem 0.8rem; margin: 0.3rem 0;
+    border: 1px solid var(--border); border-radius: 4px; cursor: default;
+  }
+</style>
+</head>
+<body>
+
+<h1>第 2 课：Skill 调度与组合</h1>
+<p class="subtitle">一个 session 里有 29 个 skill，Agent 如何决定用哪个？</p>
+<p class="meta">
+  <span>📅 2026-06-14</span>
+  <span>⏱ ~20 分钟</span>
+  <span>← <a href="0001-skill-quality-framework.html">第 1 课</a></span>
+  <span>🎯 <a href="../MISSION.md">Mission →</a></span>
+</p>
+
+<h2>1. 你的直觉是对的</h2>
+
+<p>你在第 1 课后提出了一个关键问题：</p>
+
+<div class="callout">
+  <strong>「在一个 agent 的任务中，多个 skills 能被同时调用吗？我的理解是因为可能有个任务需要多个 skills，才需要写清楚触发条件。」</strong>
+</div>
+
+<p><strong>答案是：通常一次只激活一个 skill。而这正是 Trigger Precision 存在的根本原因。</strong></p>
+
+<p>你当前的 session 里加载了 <strong>29 个 skill</strong>。每次你发一条消息，Agent 必须在 29 个候选中挑一个——或者一个都不挑。如果两个 skill 的触发条件重叠，Agent 就面临一个没有正确答案的选择题。</p>
+
+<p>让我们看看这个选择过程到底怎么运作的。</p>
+
+<h2>2. Skill Dispatch：Agent 如何选 skill</h2>
+
+<p>Skill 调度（dispatch）的流程可以简化为三步：</p>
+
+<div class="diagram">
+用户消息：「帮我写一篇学习笔记」
+              │
+              ▼
+┌─────────────────────────────────┐
+│ 第 1 步：扫描所有 skill 的 description │
+│                                     │
+│ study-note:     「当用户要求学习、   │
+│                  了解、研究…」       │
+│ feynman-test:   「当用户要求用费曼   │
+│                  学习法测试…」       │
+│ deep-research:  「当用户需要深度     │
+│                  研究…」             │
+│ …（共 29 个）                       │
+└─────────────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────┐
+│ 第 2 步：匹配 —— 谁的 description  │
+│          与用户意图最吻合？        │
+│                                 │
+│ 「帮我写一篇学习笔记」              │
+│   → study-note ✅                │
+│   → feynman-test ❌ (没说测试)    │
+│   → deep-research ❌ (没说深入研究)│
+└─────────────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────┐
+│ 第 3 步：激活 —— 将 study-note   │
+│ 的 SKILL.md 注入上下文，开始执行  │
+└─────────────────────────────────┘
+</div>
+
+<p>关键点：<strong>第 2 步是纯文本匹配，没有「理解」</strong>。Agent 读你的消息，读每个 skill 的 description，然后判断哪个最相关。如果两个 description 都匹配得很好，Agent 就是在抛硬币。</p>
+
+<h2>3. 什么时候会出问题：触发重叠</h2>
+
+<p>假设你写了两个 skill，description 分别是：</p>
+
+<div class="scene">
+  <p><span class="label label-prob">Skill A</span> 「当用户要求审查代码时使用此 skill。」</p>
+  <p style="margin-top: 0.5rem;"><span class="label label-prob">Skill B</span> 「当用户要求检查代码质量时使用此 skill。」</p>
+</div>
+
+<p>用户说「帮我看看这段代码有没有问题」——<strong>两个都匹配</strong>。Agent 可能随机选一个，或者更糟：选了 A，但用户实际想要 B 的功能。</p>
+
+<div class="callout">
+  <strong>这就是 T3 检查项的意义：</strong>「和其他 skill 的触发条件<strong>无歧义重叠</strong>」。每写一个 skill 的 description，你都要问：有没有现存的 skill 也会匹配同样的用户意图？
+</div>
+
+<details>
+  <summary>🔍 那我是不是应该把所有功能写在一个 skill 里？</summary>
+  <div class="answer">
+    <p>不。一个 skill 做一件事，这是好的设计（Unix 哲学）。问题不在「拆」，而在每个 skill 的 <strong>触发条件要互斥</strong>。</p>
+    <p>修复上面例子：</p>
+    <ul>
+      <li>Skill A：「当用户要求<strong>审查代码的正确性和安全性</strong>时使用」</li>
+      <li>Skill B：「当用户要求<strong>检查代码风格和复杂度</strong>时使用」</li>
+    </ul>
+    <p>现在「看看有没有问题」会匹配 A（正确性+安全），「这个函数太长了吧」会匹配 B（复杂度）。两个 skill 的方向不同，触发条件自然互斥。</p>
+  </div>
+</details>
+
+<h2>4. 多 Skill 协作的三种模式</h2>
+
+<p>回到你的核心问题：<strong>多个 skill 能一起工作吗？</strong>能，但不是「同时激活」，而是通过明确的调用关系来组合。</p>
+
+<h3>模式 A：独立并行（Independent）</h3>
+
+<div class="diagram">
+用户：「先帮我查一下 MCP 的资料，然后考考我」
+              │
+              ▼
+     ┌────────────────┐
+     │ Agent 判断：这是 │
+     │ 两个独立任务     │
+     │                │
+     │ 第 1 轮：        │
+     │ 匹配 study-note │
+     │ → 创建笔记      │
+     │                │
+     │ 第 2 轮：        │
+     │ 匹配 feynman-test│
+     │ → 开始出题      │
+     └────────────────┘
+</div>
+
+<p>Agent 会<strong>分两轮处理</strong>，每轮激活一个 skill。前提是两个 skill 的 description 足够互斥，Agent 能清楚地分辨「现在该用哪个」。</p>
+
+<h3>模式 B：Skill 链式调用（Chaining）</h3>
+
+<div class="diagram">
+Skill A (workflow) 在执行中显式调用 Skill B：
+
+  study-note 的第 3 步：
+  「…如果用户需要验证理解，
+    调用 feynman-test skill…」
+              │
+              ▼
+  Skill("feynman-test") → 激活 feynman-test
+</div>
+
+<p>一个 skill 可以在自己的指令里写「调用另一个 skill」。这不是两个 skill 同时激活——而是 skill A 在执行中<strong>显式启动</strong> skill B。Skill B 完成后，控制权返回 skill A。</p>
+
+<details>
+  <summary>🛠 这在 Claude Code 中怎么写？</summary>
+  <div class="answer">
+    <p>在 SKILL.md 的某个步骤中写：</p>
+    <pre><code>### 第 4 步：验证用户理解
+如果笔记创建完成且用户想检验理解，调用 Skill("feynman-test")。
+注意：必须先等用户确认，再调用。</code></pre>
+    <p>Agent 读到这句时，会通过 <code>Skill</code> 工具来激活另一个 skill。链式调用的关键是<strong>明确的条件</strong>——什么情况下调用、调用前要确认什么。</p>
+  </div>
+</details>
+
+<h3>模式 C：Workflow 编排（Orchestration）</h3>
+
+<div class="diagram">
+Workflow（更上层的编排机制）：
+
+  export const meta = { name: 'full-research-pipeline' }
+
+  phase('研究')
+  const note = await agent('用 study-note 创建笔记', …)
+
+  phase('验证')
+  const test = await agent('用 feynman-test 出题', …)
+              │
+              ▼
+  Workflow 按阶段依次激活不同的 skill/agent
+</div>
+
+<p>Workflow 是比 skill 更高层的编排机制。它在代码层面定义「先调 A，再调 B，然后并行调 C 和 D」。每个阶段内部可以激活一个或多个 skill。这适合<strong>固定的多步骤流程</strong>，而非根据用户意图灵活匹配。</p>
+
+<h2>5. 四种模式的决策指南</h2>
+
+<table>
+  <tr>
+    <th>场景</th>
+    <th>用什么</th>
+    <th>例子</th>
+  </tr>
+  <tr>
+    <td>单一任务，独立完成</td>
+    <td><strong>一个 skill</strong></td>
+    <td>「帮我创建一篇笔记」→ study-note</td>
+  </tr>
+  <tr>
+    <td>多个独立任务，先后执行</td>
+    <td><strong>分轮激活不同 skill</strong></td>
+    <td>「先查资料，再考考我」→ 第一轮 study-note，第二轮 feynman-test</td>
+  </tr>
+  <tr>
+    <td>一个 skill 内部需要另一个 skill 的能力</td>
+    <td><strong>链式调用</strong></td>
+    <td>study-note 完成后自动问「要不要测试理解」→ Skill("feynman-test")</td>
+  </tr>
+  <tr>
+    <td>固定多步骤流程，每次都要按序执行</td>
+    <td><strong>Workflow</strong></td>
+    <td>「完整研究管线」：搜索 → 笔记 → 验证 → 总结</td>
+  </tr>
+</table>
+
+<h2>6. 练习：设计互斥触发条件</h2>
+
+<div class="scene">
+  <h3 style="margin-top: 0;">场景</h3>
+  <p>你要为团队写三个 skill：</p>
+  <ol>
+    <li><strong>code-review</strong>：审查代码的正确性和安全性</li>
+    <li><strong>refactor-suggest</strong>：建议代码重构和优化</li>
+    <li><strong>debug-helper</strong>：帮助定位和修复 bug</li>
+  </ol>
+</div>
+
+<details>
+  <summary>🔍 这三者的触发条件会有重叠吗？试着想一下再点开。</summary>
+  <div class="answer">
+    <p>有重叠风险：</p>
+    <ul>
+      <li>「这段代码有个 bug」→ debug-helper 还是 code-review？</li>
+      <li>「帮我优化这个函数」→ refactor-suggest 还是 code-review？</li>
+      <li>「审查一下安全性」→ 明确是 code-review，没问题</li>
+    </ul>
+    <p><strong>改进后的 description：</strong></p>
+    <ul>
+      <li><strong>code-review</strong>：「当用户提交 PR、要求 review 代码变更、检查代码是否<strong>符合规范和安全标准</strong>时使用。<em>不触发于</em>：用户报告 bug 或要求定位问题（用 debug-helper），要求优化性能或结构（用 refactor-suggest）。」</li>
+      <li><strong>refactor-suggest</strong>：「当用户要求<strong>改进已有代码的结构、可读性或性能</strong>，且代码<strong>功能正常无 bug</strong> 时使用。<em>不触发于</em>：代码有 bug、报错、行为异常。」</li>
+      <li><strong>debug-helper</strong>：「当用户报告<strong>代码报错、行为异常、结果不符合预期</strong>时使用。<em>不触发于</em>：代码功能正常但需要优化（用 refactor-suggest），常规 PR review。」</li>
+    </ul>
+    <p>注意每个 description 都写了<strong>不触发条件</strong>，指向另外两个 skill。这样 Agent 在匹配时能明确排除。</p>
+  </div>
+</details>
+
+<h2>7. 关键收获</h2>
+
+<div class="callout">
+  <strong>本课核心：</strong><br>
+  1. <strong>一次一个 skill</strong>——Agent 每轮只激活一个 skill，通过 description 匹配<br>
+  2. <strong>触发重叠 = 随机选择 = 不可靠</strong>——写 description 要确保和其他 skill 互斥<br>
+  3. <strong>多 skill 协作有三种模式</strong>：分轮激活、链式调用、Workflow 编排<br>
+  4. <strong>排除条件（「不触发于」）和正面条件同样重要</strong>——它让 Agent 知道什么时候不该用你
+</div>
+
+<h2>8. 联系第 1 课</h2>
+
+<p>现在回头看 T-P-G 三角中的 <span class="tag tag-t">T</span> <strong>Trigger Precision</strong>，它的深层含义是：</p>
+
+<div class="callout">
+  <strong>Trigger Precision 的本质不是「让 skill 被正确调用」，而是「在 29 个候选中，让 Agent 能无歧义地选到你」。</strong><br><br>
+  你的 description 不是写给用户看的说明书——它是<strong>写给 Agent 看的选票</strong>。
+</div>
+
+<h2>9. 推荐阅读</h2>
+
+<p>📖 打开你的 session，输入 <code>/skills</code> 看看当前加载了哪些 skill。找一个你从来没用过的 skill，读它的 description——想想为什么它从来没被误触发过（或者被误触发过）。</p>
+
+<p>📖 检查你自己的 study-note 和 feynman-test 的 description——它们有触发重叠吗？如果有，怎么改？</p>
+
+<h2>10. 下一课预告</h2>
+
+<p>下一课聚焦 <strong>Context Engineering</strong>：回答你一开始的问题——「到底给 AI 什么信息才算好？」帮你建立判断上下文质量的直觉。</p>
+
+<div class="nav">
+  <p>
+    ← <a href="0001-skill-quality-framework.html">第 1 课：T-P-G 三角</a> ·
+    <a href="../reference/skill-design-checklist.html">📋 Skill 设计检查清单</a>
+  </p>
+  <p style="margin-top: 1.5rem;">
+    ❓ 有问题？<strong>直接问我</strong>。例如：「链式调用和 Workflow 编排，什么时候该用哪个？」「我写的 study-note 和 feynman-test 有触发重叠吗？」
+  </p>
+  <p style="margin-top: 2rem; font-size: 0.8rem; color: #999;">
+    课程 0002 · 基于 <a href="../MISSION.md">Mission: AI 工作流与 Skills 工程设计</a>
+  </p>
+</div>
+
+</body>
+</html>

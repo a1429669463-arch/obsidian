@@ -23,6 +23,11 @@ Harness Engineering 则是更上层的系统设计问题：如何把模型、pro
 
 OpenAI: - [[Harness engineering - leveraging Codex in an agent-first world]]
 
+## 相关笔记
 
+- [[AI学习路线]] — 返回学习路线总览
+- [[Agent]] — Model + Harness
+- [[Prompt Engineering]] — Harness 的关键组成部分
+- [[Context Engineering]] — Harness 的关键组成部分
 
 

@@ -26,3 +26,9 @@ skill.md
 
 一旦调用 Skill，skill.md 中的主要指令会进入上下文。  
 scripts、references 等资源不一定全部进入上下文，而是根据 skill.md 的指示按需读取或执行。
+
+## 相关笔记
+
+- [[AI学习路线]] — 返回学习路线总览
+- [[MCP]] — 另一种工具接入协议
+- [[Agent]] — 使用 Skills 的主体

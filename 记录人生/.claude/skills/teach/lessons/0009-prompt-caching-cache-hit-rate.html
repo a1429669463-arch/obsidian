@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 9 课：缓存命中率 — 你 Context Engineering 的财务回报</title>
+<style>
+  :root {
+    --text: #1a1a1a; --muted: #555; --accent: #c44; --bg: #fefefe;
+    --code-bg: #f4f2f0; --border: #e0ddd8; --highlight: #fff8e1;
+    --green: #2e7d32; --red: #c62828;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: Georgia, "Noto Serif CJK SC", "Source Han Serif SC", serif;
+    color: var(--text); background: var(--bg);
+    line-height: 1.75; max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem 6rem;
+  }
+  h1 { font-size: 1.65rem; line-height: 1.3; margin-bottom: 0.3rem; font-family: -apple-system, "PingFang SC", sans-serif; }
+  h2 { font-size: 1.15rem; margin: 2rem 0 0.6rem; padding-top: 0.9rem; border-top: 1px solid var(--border); font-family: -apple-system, "PingFang SC", sans-serif; }
+  h3 { font-size: 1rem; margin: 1.2rem 0 0.4rem; font-family: -apple-system, "PingFang SC", sans-serif; }
+  p { margin: 0.65rem 0; }
+  .subtitle { color: var(--muted); font-size: 0.95rem; margin-bottom: 0.3rem; font-style: italic; }
+  .meta { font-size: 0.83rem; color: var(--muted); margin-bottom: 2rem; }
+  .meta span { margin-right: 1.3rem; }
+
+  .callout {
+    margin: 1.2rem 0; padding: 0.85rem 1rem;
+    border-left: 3px solid var(--accent); background: var(--highlight);
+    border-radius: 0 4px 4px 0; font-size: 0.9rem;
+  }
+  .callout strong { color: var(--accent); }
+
+  pre {
+    background: var(--code-bg); padding: 0.7rem 0.9rem; border-radius: 5px;
+    overflow-x: auto; font-size: 0.8rem; line-height: 1.5; margin: 0.8rem 0;
+    border: 1px solid var(--border);
+  }
+  code { font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace; font-size: 0.86em; }
+  pre code { font-size: 0.8rem; }
+
+  details {
+    margin: 0.8rem 0; padding: 0.7rem 0.9rem;
+    background: #fafaf8; border: 1px solid var(--border); border-radius: 5px;
+  }
+  details summary {
+    cursor: pointer; font-weight: 600;
+    font-family: -apple-system, "PingFang SC", sans-serif; color: var(--accent);
+  }
+  details summary:hover { text-decoration: underline; }
+  details .answer { margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed var(--border); }
+
+  table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.84rem; }
+  th { text-align: left; padding: 0.4rem 0.5rem; border-bottom: 2px solid var(--border); font-size: 0.75rem; color: var(--muted); }
+  td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: #fcfcfa; }
+
+  .nav { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.87rem; color: var(--muted); }
+  .nav a { color: var(--accent); }
+
+  .layers {
+    font-family: -apple-system, "PingFang SC", sans-serif; font-size: 0.82rem;
+    line-height: 1.8; margin: 1rem 0;
+  }
+  .layer {
+    padding: 0.4rem 0.7rem; margin: 0.15rem 0; border-radius: 4px;
+    border-left: 3px solid;
+  }
+  .l1 { background: #fce4ec; border-color: #c62828; }
+  .l2 { background: #fff3e0; border-color: #ef6c00; }
+  .l3 { background: #e8f5e9; border-color: #2e7d32; }
+  .l4 { background: #e3f2fd; border-color: #1565c0; }
+
+  .quiz-option {
+    display: block; padding: 0.4rem 0.7rem; margin: 0.2rem 0;
+    background: #f8f8f6; border: 1px solid var(--border); border-radius: 4px;
+    cursor: pointer; font-size: 0.88rem;
+  }
+  .quiz-option:hover { background: #e8e6e0; }
+
+  .tag-safe { display: inline-block; font-size: 0.7rem; padding: 0.1em 0.4em; border-radius: 3px; background: #e8f5e9; color: #2e7d32; font-weight: 600; }
+  .tag-kill { display: inline-block; font-size: 0.7rem; padding: 0.1em 0.4em; border-radius: 3px; background: #fce4ec; color: #c62828; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>第 9 课：缓存命中率</h1>
+<p class="subtitle">你 Context Engineering 工作的财务回报——每一 token 的缓存命中都在省钱</p>
+<p class="meta">
+  <span>📅 2026-06-14</span>
+  <span>⏱ ~25 分钟</span>
+  <span>← <a href="0008-hooks-and-mechanism-choice.html">第 8 课</a></span>
+</p>
+
+<h2>1. 从一组数字开始</h2>
+
+<table>
+  <tr><th></th><th>基础价</th><th>缓存命中</th></tr>
+  <tr><td>输入 token</td><td>100%</td><td><strong>~10%</strong></td></tr>
+  <tr><td>缓存写入</td><td>—</td><td>125%（5min TTL）/ 200%（1h TTL）</td></tr>
+</table>
+
+<div class="callout">
+  <strong>一句话：</strong>缓存命中的 token 只需支付原价的十分之一。你第 4 课学的 Context Engineering 决定哪些内容进入缓存、哪些破坏缓存。结构好 = 省钱 + 加速。
+</div>
+
+<p>这不是小优化。Anthropic 团队<strong>像监控服务器 uptime 一样监控缓存命中率</strong>——掉几个百分点就会触发 SEV（严重事件）。一位工程师一周靠缓存优化省了 <strong>3 亿 token</strong>。</p>
+
+<h2>2. 缓存如何工作：前缀匹配</h2>
+
+<p>每次你发消息，API 不会「记住」之前的对话。Claude Code 把<strong>完整的上下文</strong>——系统提示、项目上下文、全部历史消息——重新发送。新增内容追加在末尾。</p>
+
+<p>缓存的机制是<strong>前缀匹配</strong>：API 比对请求的开头部分与之前处理过的内容。如果前 N 个 token 完全一致 → 命中缓存，只需处理新增部分。</p>
+
+<div class="callout">
+  <strong>关键推论：</strong>前缀<em>任何位置</em>的改变，都会使该位置<em>之后的所有内容</em>缓存失效。缓存不是按文件、按段落匹配的——是从头开始逐 token 比对。
+</div>
+
+<h2>3. 四层结构：静态在前，动态在后</h2>
+
+<p>Claude Code 将每次请求排列为四层，越靠前的层越稳定：</p>
+
+<div class="layers">
+  <div class="layer l1"><strong>① 系统提示 + 工具定义</strong> ← 最稳定（Claude Code 升级或 MCP 工具集变更时才变）</div>
+  <div class="layer l2"><strong>② 项目上下文</strong>（CLAUDE.md、memory、rules） ← 会话启动或 /compact 时重新加载</div>
+  <div class="layer l3"><strong>③ 会话上下文</strong> ← 逐轮追加</div>
+  <div class="layer l4"><strong>④ 对话消息</strong>（你的消息 + AI 回复 + 工具结果） ← 每轮都在变</div>
+</div>
+
+<p>第 ① 层变了 → 全部缓存失效。第 ④ 层变了 → 前三层依然命中。这就是为什么 <strong>「静态在前，动态在后」是缓存优化的铁律</strong>。</p>
+
+<h2>4. 缓存杀手：这 8 个操作会让缓存全部重建</h2>
+
+<table>
+  <tr><th>操作</th><th>为什么破坏缓存</th><th>可避免？</th></tr>
+  <tr>
+    <td>🔄 <strong>切换模型</strong></td>
+    <td>每个模型有独立缓存。内容相同，换模型 = 全量重算</td>
+    <td>✅ 会话开始时选定模型</td>
+  </tr>
+  <tr>
+    <td>⚡ <strong>改变 effort level</strong></td>
+    <td>effort level 是缓存 key 的一部分</td>
+    <td>✅ 会话开始时设定</td>
+  </tr>
+  <tr>
+    <td>🔌 <strong>MCP server 连接/断开</strong></td>
+    <td>工具定义在系统提示层，变化 → 前缀全变（defer_loading 模式下除外）</td>
+    <td>⚠️ 部分可控（见第 6 节）</td>
+  </tr>
+  <tr>
+    <td>📦 <strong>/compact 压缩</strong></td>
+    <td>消息历史被替换为摘要，前缀不匹配</td>
+    <td>⚠️ 在任务间隙手动触发，而非等自动触发</td>
+  </tr>
+  <tr>
+    <td>⬆️ <strong>Claude Code 升级</strong></td>
+    <td>系统提示或工具定义更新</td>
+    <td>✅ 升级不发生在会话中（启动时生效）</td>
+  </tr>
+  <tr>
+    <td>🚫 <strong>deny 整个工具</strong></td>
+    <td>deny 规则从上下文中移除工具定义 → 前缀变化</td>
+    <td>✅ 用限定 deny（如 Bash(rm *)），不 den 整个工具</td>
+  </tr>
+  <tr>
+    <td>🔧 <strong>启用/禁用插件</strong></td>
+    <td>若插件提供 MCP server，同 MCP 规则</td>
+    <td>⚠️ Skills/commands/hooks 类插件不影响缓存</td>
+  </tr>
+  <tr>
+    <td>⚡ <strong>开启 fast mode</strong></td>
+    <td>添加了请求头 → 缓存 key 变化</td>
+    <td>✅ 会话开始时开启</td>
+  </tr>
+</table>
+
+<div class="callout">
+  <strong>Opus Plan 模式特别提醒：</strong>如果你配置了 <code>opusplan</code>——进入 plan 模式用 Opus，执行时用 Sonnet——每次模式切换就是一次模型切换，缓存重建。这不是 bug，是设计选择——但你要知道它有成本。
+</div>
+
+<h2>5. 缓存安全：这些操作不破坏缓存</h2>
+
+<table>
+  <tr><th>操作</th><th>为什么安全</th></tr>
+  <tr><td>✏️ <strong>编辑文件</strong></td><td>文件内容只在读取时进入上下文，编辑不回溯修改已有的读取记录</td></tr>
+  <tr><td>📝 <strong>编辑 CLAUDE.md</strong></td><td>会话中不重新加载——读到的是会话启动时的版本</td></tr>
+  <tr><td>🎨 <strong>改输出风格</strong></td><td>会话启动时读入系统提示，会话中不重新读取</td></tr>
+  <tr><td>🔓 <strong>切换权限模式</strong></td><td>不改变系统提示或工具定义（plan mode + opusplan 除外）</td></tr>
+  <tr><td>📥 <strong>调用 Skill / 命令</strong></td><td>Skill 指令以<strong>用户消息</strong>形式追加在末尾，前缀不变</td></tr>
+  <tr><td>⏪ <strong>/rewind 回退</strong></td><td>截断到更早的轮次，该轮次的前缀仍在缓存中（只要被持续读取过）</td></tr>
+  <tr><td>🤖 <strong>启动子代理</strong></td><td>子代理有独立的缓存，父代理的缓存不受影响</td></tr>
+</table>
+
+<div class="callout">
+  <strong>Skill 是缓存友好的：</strong>Skill 指令以用户消息的形式追加，不修改前缀。这意味着你在 skill 里写再多指令，也不会破坏已有的缓存——Skill 的设计天然保护缓存。
+</div>
+
+<h2>6. Skill 与缓存：你可以控制什么</h2>
+
+<p>回到你的 Mission——设计更好的 Skill。Skill 本身就缓存安全，但你还能做得更多：</p>
+
+<h3>6.1 CLAUDE.md 要精不要多</h3>
+
+<p>CLAUDE.md 在系统提示之后的第 ② 层，跨会话可能共享缓存。但它每次会话启动都被读取，是前缀的一部分。</p>
+
+<table>
+  <tr><th>放什么</th><th>不放什么</th></tr>
+  <tr><td>构建/测试命令、架构边界、编码约定</td><td>背景叙述、完整 API 文档、模糊的原则</td></tr>
+  <tr><td>NEVER/ALWAYS 硬约束</td><td>「合适的」「清晰的」等模糊形容词</td></tr>
+  <tr><td>Compact 存活指令</td><td>每个文件的详细说明</td></tr>
+  <tr><td>2.5K token 以内</td><td>超过 3K token 的 CLAUDE.md</td></tr>
+</table>
+
+<p>这恰好是你第 4 课学会的信息密度公式的另一个应用：<strong>短 CLAUDE.md = 低缓存写入成本 + 高跨会话复用率</strong>。</p>
+
+<h3>6.2 MCP 工具的 defer_loading</h3>
+
+<p>MCP 工具定义在系统提示层，是缓存失效的最大隐藏杀手。默认情况下，Claude Code 对支持的模型使用 <strong>defer_loading</strong>——只发轻量 stub（工具名 + defer_loading: true），模型选中后才加载完整 schema。</p>
+
+<div class="callout">
+  <strong>对你的意义：</strong>你写内网 MCP server（第 7 课）时，不需要为缓存做额外的事——defer_loading 已自动保护。但如果你标记了 <code>alwaysLoad: true</code>，该 server 的工具定义会进入前缀，server 重连就会破坏缓存。
+</div>
+
+<h3>6.3 不要在 Skill 描述里放动态内容</h3>
+
+<p>Skill 的描述（SKILL.md 的 frontmatter description）会在会话启动时加载为系统提示的一部分（在第 ① 层之后）。虽然 Skill 调用本身在消息层追加，但 <strong>Skill 元信息列表是静态前缀的一部分</strong>。</p>
+
+<p>如果你用脚本动态生成 SKILL.md 的 description 且内容每次不同 → 每次会话启动前缀都不同 → 跨会话无法复用缓存。</p>
+
+<h2>7. TTL：缓存活多久</h2>
+
+<table>
+  <tr><th>场景</th><th>TTL</th><th>说明</th></tr>
+  <tr><td>Claude 订阅</td><td><strong>1 小时</strong></td><td>自动启用，不额外收费</td></tr>
+  <tr><td>API Key</td><td>5 分钟</td><td>默认。设 <code>ENABLE_PROMPT_CACHING_1H=1</code> 可升到 1 小时</td></tr>
+  <tr><td>子代理</td><td><strong>总是 5 分钟</strong></td><td>即使主会话有 1 小时 TTL</td></tr>
+  <tr><td>配额用完后</td><td>降为 5 分钟</td><td>用量按 token 计费后自动降级</td></tr>
+</table>
+
+<p>每次缓存命中会重置计时器。你持续工作时，缓存一直存活。离开超过 TTL → 下次请求全量重算。</p>
+
+<h2>8. 监控：怎么看缓存有没有在工作</h2>
+
+<p>你的 statusline 已经配置好了。每次 API 响应中有两个关键字段：</p>
+
+<table>
+  <tr><th>字段</th><th>含义</th></tr>
+  <tr><td><code>cache_creation_input_tokens</code></td><td>本轮写入缓存的 token（按写入价计费）</td></tr>
+  <tr><td><code>cache_read_input_tokens</code></td><td>本轮从缓存读取的 token（按 ~10% 价计费）</td></tr>
+</table>
+
+<p><strong>读/写比高 → 缓存工作良好。写入持续很高 → 前缀在频繁变化，排查第 4 节列表。</strong></p>
+
+<h2>9. 回到你的工作场景</h2>
+
+<p>你在设计 Skill 和工作流时，缓存优化不是独立步骤——它是你已有的 Context Engineering（第 4 课）和 Skill 开发闭环（第 5 课）的<strong>自然延伸</strong>：</p>
+
+<table>
+  <tr><th>你已有的原则</th><th>缓存维度的翻译</th></tr>
+  <tr><td>上下文预算测试：删掉它 AI 还能做吗？</td><td>删掉它能减少前缀长度 = 降低缓存写入成本</td></tr>
+  <tr><td>信息密度 = 可执行约束 ÷ token 数</td><td>高密度 CLAUDE.md = 更多约束用更少缓存空间</td></tr>
+  <tr><td>渐进式披露：按需加载</td><td>Skill 和 MCP defer_loading 天然保护缓存</td></tr>
+  <tr><td>五步闭环的「观察」阶段</td><td>加入缓存指标观察（cache_read / cache_creation 比例）</td></tr>
+</table>
+
+<h2>10. 你的实战检查清单</h2>
+
+<div class="callout">
+  <strong>每次设计/审查 Skill 或 CLAUDE.md 时问自己：</strong><br><br>
+  □ 最稳定的内容放在最前面了吗？<br>
+  □ CLAUDE.md 有没有可以删掉的背景叙述？<br>
+  □ 工具集在会话中会变吗？（变了 = 缓存全毁）<br>
+  □ 有没有动态内容（时间戳、随机 ID）出现在前缀层？<br>
+  □ 大文件是放在 Projects 里还是直接贴进聊天？（后者贵 10 倍）<br>
+  □ 会话间隙超过 TTL 有没有做 handoff？（见下文）
+</div>
+
+<h3>Handoff 模式：任务切换时保护投资</h3>
+
+<p>当你需要切换任务但不想丢失进度：</p>
+
+<pre><code>1. 让 Claude 总结当前进度 → 生成 handoff 摘要
+2. /clear 清空会话
+3. 粘贴 handoff 摘要，开始新任务
+4. 新会话的缓存从头开始，但旧会话的 token 不会继续膨胀</code></pre>
+
+<h2>11. 关键收获</h2>
+
+<div class="callout">
+  <strong>本课核心：</strong><br>
+  1. <strong>缓存 = 前缀匹配</strong>——前缀任何位置改变，之后全部失效<br>
+  2. <strong>静态在前，动态在后</strong>——这是所有缓存优化的根基<br>
+  3. <strong>8 个缓存杀手</strong>——切换模型、改 effort、MCP 变动、compact、升级、deny 工具、插件 MCP、fast mode<br>
+  4. <strong>Skill 天然缓存安全</strong>——指令以用户消息追加，不修改前缀<br>
+  5. <strong>CLAUDE.md 精短 = 省钱</strong>——2.5K token 以内，每多 1K 就是每次会话启动的额外缓存写入成本<br>
+  6. <strong>缓存命中率 ≈ 你的上下文结构质量指标</strong>——高命中 = 结构好，低命中 = 前缀在频繁变化
+</div>
+
+<h2>12. 检验理解</h2>
+
+<details>
+  <summary><strong>Q1：</strong>你在会话中编辑了 CLAUDE.md，加了一条新规则。这条规则会立即生效吗？会破坏缓存吗？</summary>
+  <div class="answer">
+    <p><strong>不会立即生效，也不会破坏缓存。</strong></p>
+    <p>CLAUDE.md 在会话启动时一次性读入内存。编辑文件不回溯修改内存中已加载的版本。新规则在下一次 /clear、/compact 或重启后生效。这是故意设计——如果每次编辑 CLAUDE.md 都重新加载，前缀就会变，缓存就毁了。</p>
+  </div>
+</details>
+
+<details>
+  <summary><strong>Q2：</strong>你的 study-note skill 被调用时，会破坏当前会话的缓存吗？为什么？</summary>
+  <div class="answer">
+    <p><strong>不会。</strong></p>
+    <p>Skill 调用时，其指令以<strong>用户消息</strong>的形式追加在对话末尾。消息在缓存四层结构的最外层（第 ④ 层），前面的系统提示、项目上下文、历史消息的前缀完全不变。缓存只对新增的 skill 指令 token 收费，前面全部命中。</p>
+  </div>
+</details>
+
+<details>
+  <summary><strong>Q3：</strong>你用 /model 从 Sonnet 切到 Opus 处理一个难题。这个切换有隐藏成本吗？</summary>
+  <div class="answer">
+    <p><strong>有。下一次请求缓存全部重建。</strong></p>
+    <p>每个模型有独立的缓存空间。即使请求内容完全一样，Opus 无法读取 Sonnet 的缓存。切换后的第一轮要全量重算整段对话历史——这轮会比平时<strong>慢得多、贵得多</strong>。更好的做法：在会话开始时就选定模型，或用子代理（子代理可以用不同模型，但不影响父会话缓存）。</p>
+  </div>
+</details>
+
+<h2>13. 推荐阅读</h2>
+
+<p>📖 <a href="https://claude.com/blog/lessons-from-building-claude-code-prompt-caching-is-everything">Lessons from building Claude Code: Prompt caching is everything</a> — Anthropic 官方博客，本文的核心来源。必读。</p>
+
+<p>📖 <a href="https://code.claude.com/docs/en/prompt-caching">How Claude Code uses prompt caching</a> — Claude Code 官方文档，缓存行为完整参考。</p>
+
+<p>📖 <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Prompt Caching API 参考</a> — 底层 API 机制、breakpoint、定价。</p>
+
+<p>📖 回顾你的 <a href="0004-context-engineering.html">第 4 课（Context Engineering）</a>——缓存优化是上下文设计的自然延伸。</p>
+
+<h2>14. 下节课预告</h2>
+
+<p>你已经掌握了所有基础理论。下一课是<strong>综合实战</strong>：针对你工作中真实的代码审查场景，用 T-P-G + Context Engineering + 五步闭环 + MCP + Hook + 缓存意识，从头设计并实现一个工作型 skill。这是最后一课——把所有知识串起来。</p>
+
+<div class="nav">
+  <p>
+    ← <a href="0008-hooks-and-mechanism-choice.html">第 8 课：Hooks + 三机制分工</a>
+  </p>
+  <p style="margin-top: 1.2rem;">
+    ❓ <strong>有问题：</strong>「我的 CLAUDE.md 大概多少 token？」「defer_loading 在我的模型上支持吗？」「怎么在 statusline 里显示缓存命中率？」
+  </p>
+  <p style="margin-top: 2rem; font-size: 0.8rem; color: #999;">
+    课程 0009 · 基于 <a href="../MISSION.md">Mission: AI 工作流与 Skills 工程设计</a>
+  </p>
+</div>
+
+</body>
+</html>

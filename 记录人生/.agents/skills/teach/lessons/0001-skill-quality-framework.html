@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 1 课：Skill 设计的第一性原理 — 把 AI 的选择空间收窄</title>
+<style>
+  :root {
+    --text: #1a1a1a;
+    --muted: #555;
+    --accent: #c44;
+    --bg: #fefefe;
+    --code-bg: #f4f2f0;
+    --border: #e0ddd8;
+    --highlight: #fff8e1;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: Georgia, "Noto Serif CJK SC", "Source Han Serif SC", serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.75;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+  }
+  h1 { font-size: 1.8rem; line-height: 1.3; margin-bottom: 0.3rem; font-family: -apple-system, "PingFang SC", sans-serif; }
+  h2 { font-size: 1.25rem; margin: 2.5rem 0 0.75rem; padding-top: 1rem; border-top: 1px solid var(--border); font-family: -apple-system, "PingFang SC", sans-serif; }
+  h3 { font-size: 1.05rem; margin: 1.5rem 0 0.5rem; font-family: -apple-system, "PingFang SC", sans-serif; }
+  p { margin: 0.75rem 0; }
+  .subtitle { color: var(--muted); font-size: 1rem; margin-bottom: 2rem; font-style: italic; }
+  .meta { font-size: 0.85rem; color: var(--muted); margin-bottom: 2.5rem; }
+  .meta span { margin-right: 1.5rem; }
+
+  /* Callouts */
+  .callout {
+    margin: 1.5rem 0;
+    padding: 1rem 1.2rem;
+    border-left: 3px solid var(--accent);
+    background: var(--highlight);
+    border-radius: 0 4px 4px 0;
+    font-size: 0.95rem;
+  }
+  .callout strong { color: var(--accent); }
+
+  /* Code blocks */
+  pre {
+    background: var(--code-bg);
+    padding: 0.9rem 1.1rem;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    margin: 1rem 0;
+    border: 1px solid var(--border);
+  }
+  code { font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace; font-size: 0.88em; }
+  pre code { font-size: 0.85rem; }
+
+  /* Interactive: details/summary for reveal */
+  details {
+    margin: 1rem 0;
+    padding: 0.8rem 1rem;
+    background: #fafaf8;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+  }
+  details summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-family: -apple-system, "PingFang SC", sans-serif;
+    color: var(--accent);
+    user-select: none;
+  }
+  details summary:hover { text-decoration: underline; }
+  details .answer {
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1px dashed var(--border);
+  }
+
+  /* Good/Bad comparison */
+  .compare { display: flex; gap: 1rem; margin: 1rem 0; flex-wrap: wrap; }
+  .compare > div { flex: 1; min-width: 240px; padding: 0.9rem 1rem; border-radius: 5px; }
+  .bad { background: #fff0f0; border: 1px solid #fcc; }
+  .good { background: #f0fff2; border: 1px solid #cfc; }
+  .bad h4 { color: #b33; font-family: -apple-system, "PingFang SC", sans-serif; margin-bottom: 0.4rem; }
+  .good h4 { color: #2a2; font-family: -apple-system, "PingFang SC", sans-serif; margin-bottom: 0.4rem; }
+
+  /* Checklist */
+  .checklist { list-style: none; padding: 0; }
+  .checklist li { padding: 0.3rem 0; }
+  .checklist li::before { content: "☐ "; color: var(--accent); font-size: 1.1em; }
+
+  /* Nav */
+  .nav { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.9rem; color: var(--muted); }
+  .nav a { color: var(--accent); }
+
+  /* Exercise */
+  .exercise {
+    background: #f8f8f6;
+    border: 1px dashed var(--border);
+    padding: 1.2rem 1.3rem;
+    border-radius: 6px;
+    margin: 1.5rem 0;
+  }
+  .exercise h3 { margin-top: 0; color: var(--accent); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .exercise textarea {
+    width: 100%; min-height: 120px; margin: 0.5rem 0;
+    font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    font-size: 0.85rem; padding: 0.6rem; border: 1px solid var(--border); border-radius: 4px;
+    background: #fff;
+  }
+  .principle-label {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.75rem;
+    padding: 0.15em 0.5em;
+    border-radius: 3px;
+    margin-right: 0.3rem;
+    font-family: -apple-system, "PingFang SC", sans-serif;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<h1>第 1 课：Skill 设计的第一性原理</h1>
+<p class="subtitle">把 AI 的选择空间收窄 —— 好的 skill 不是百科全书，而是一组约束</p>
+<p class="meta">
+  <span>📅 2026-06-14</span>
+  <span>⏱ ~20 分钟</span>
+  <span>🎯 <a href="../MISSION.md">Mission →</a></span>
+</p>
+
+<h2>1. 从一个问题开始</h2>
+
+<p>你有两个 skill，都写得结构完整、有检查清单、有渐进式披露。但你仍然觉得「有所不足」。</p>
+
+<p>让我们直面这个问题：<strong>两个结构相似的 skill，为什么一个稳定可靠，另一个总跑偏？</strong></p>
+
+<div class="callout">
+  <strong>核心洞察：</strong>AI 在每一步都有近乎无限的选择空间。一个好的 skill，本质上是一个<strong>约束引擎</strong>——它在每一步都刻意把 AI 的选择空间收窄，直到只剩下你想要的那个答案。
+</div>
+
+<p>反过来说：如果你的 skill 在某一步给了 AI 太多的「发挥空间」，那 AI 就会发挥——而且往往发挥的不是你想要的。</p>
+
+<h2>2. Skill 质量三角</h2>
+
+<p>一个 skill 的质量可以从三个维度评估：</p>
+
+<p><strong><span class="principle-label">T</span> Trigger Precision（触发精度）</strong> — AI 能<em>准确知道</em>什么时候该用这个 skill 吗？有没有明确的和不触发的情况？</p>
+
+<p><strong><span class="principle-label">P</span> Procedure Clarity（流程清晰度）</strong> — 每一步是否只有一个明确的行动？AI 读完这一步知道<em>具体要做什么</em>吗？</p>
+
+<p><strong><span class="principle-label">G</span> Guardrails（护栏完整度）</strong> — 哪些事绝对不能做？出错/信息不足/超出范围时怎么办？</p>
+
+<details>
+  <summary>🔍 用一个比喻来理解：skill = 驾驶导航</summary>
+  <div class="answer">
+    <p>假设你要开车去一个陌生的地方：</p>
+    <ul>
+      <li><strong>Trigger</strong> = 你知道什么时候该打开导航（不是每次出门都用，但去陌生地方一定用）</li>
+      <li><strong>Procedure</strong> = 导航的每一步指令：「前方 300 米右转」——明确、单一、不可误解</li>
+      <li><strong>Guardrails</strong> = 「如果错过了路口，不要掉头，前方 500 米有替代路线」——出错后有预案</li>
+    </ul>
+    <p>一个<strong>差的导航</strong>：「你往西北方向开，自己找路」——这就是一个 Procedure 不清晰的 skill。</p>
+  </div>
+</details>
+
+<h2>3. 诊断你的 skill：一个实例</h2>
+
+<p>下面是你 study-note skill 的第 1 步原文：</p>
+
+<pre><code>### 第 1 步：搜索获取知识
+针对用户问题，通过网络搜索获取知识。规则见 `references/note-rules.md`。</code></pre>
+
+<p>用三角框架来诊断：</p>
+
+<div class="compare">
+  <div class="bad">
+    <h4>⚠️ 当前的问题</h4>
+    <p><strong>Procedure 不够清晰：</strong>「通过网络搜索获取知识」是一个大方向，不是一步操作。AI 要搜什么？用什么搜？搜到什么程度算够？搜完了怎么处理结果？</p>
+    <p>「规则见 references/XXX」把具体的约束推到了另一个文件——但那个文件是写给人看的规则，不是写给 AI 的操作指令。</p>
+  </div>
+  <div class="good">
+    <h4>✅ 改进方向</h4>
+    <p>拆成 2-3 个更小的子步骤，每个步骤只有一个明确行动：</p>
+    <p>1a. 提取搜索关键词<br>1b. 用 WebSearch 搜索（1-2 次）<br>1c. 对关键结果用 WebFetch 获取详情<br>1d. 判断信息是否足够 → 不够则补充搜索</p>
+  </div>
+</div>
+
+<details>
+  <summary>🔍 但我每个步骤都拆了呀？为什么还是感觉不够？</summary>
+  <div class="answer">
+    <p>因为你拆的粒度是对的（第 0-5 步），但是<strong>每一步内部的具体操作动作</strong>可以更精确。比较：</p>
+    <ul>
+      <li>「搜索获取知识」 ← 一个方向</li>
+      <li>「从用户问题中提取 3-5 个关键词，用 WebSearch 逐一搜索」 ← 一个动作</li>
+      <li>「对搜索结果中排名前 3 的页面用 WebFetch 获取全文」 ← 一个动作</li>
+      <li>「如果 WebFetch 返回的内容加起来不足 500 字，再搜索一次」 ← 一个带判断的动作</li>
+    </ul>
+    <p>每一步的「动作」越具体，AI 的发挥空间越小，结果越可控。</p>
+  </div>
+</details>
+
+<h2>4. 三角框架详解</h2>
+
+<h3>4.1 Trigger Precision（触发精度）</h3>
+
+<p>一个好 trigger 需要同时说清楚两件事：</p>
+<ul>
+  <li><strong>什么时候触发</strong>（正面条件）</li>
+  <li><strong>什么时候<em>不</em>触发</strong>（排除条件）</li>
+</ul>
+
+<p>看看你 feynman-test 的 description：</p>
+
+<pre><code>当用户要求「用费曼学习法测试」...时使用此 skill。
+即使用户没说"费曼"这个词，只要表达了检验自己理解程度的意图...也应该触发。
+普通的「XX 是什么」「帮我解释」「帮我复习」不触发。 ← 这就是排除条件</code></pre>
+
+<p>最后一句排除条件非常关键——它防止了误触发。这正是好的 Trigger Precision。</p>
+
+<h3>4.2 Procedure Clarity（流程清晰度）</h3>
+
+<p>判断标准：<strong>一个没看过你 skill 的人，读完某一步后，能不能不加思考地执行？</strong></p>
+
+<p>常见问题：</p>
+<ul>
+  <li>动词模糊：「分析」「处理」「整理」← 这些不是操作</li>
+  <li>隐含判断：「选择合适的方法」← 什么叫合适？AI 不知道你的标准</li>
+  <li>引用外跳：「详见 XX 文档」← 那个文档足够具体吗？</li>
+</ul>
+
+<details>
+  <summary>🛠 实操技巧：把「动词」换成工具名</summary>
+  <div class="answer">
+    <p>把模糊动词替换成 AI 可执行的具体动作：</p>
+    <ul>
+      <li>「搜索」→ <code>WebSearch("关键词")</code> 或 <code>Grep("pattern")</code></li>
+      <li>「检查」→ <code>Read(file_path)</code> 然后逐项对照 checklist</li>
+      <li>「确认」→ <code>AskUserQuestion(...)</code> 等待用户回复</li>
+      <li>「写入」→ <code>Write(file_path, content)</code></li>
+    </ul>
+    <p>你的 skill 已经有了这种意识——比如 study-note 第 0 步写了「用 Grep 按概念关键词搜索」。这就是好的 Procedure Clarity。</p>
+  </div>
+</details>
+
+<h3>4.3 Guardrails（护栏完整度）</h3>
+
+<p>护栏回答三个问题：</p>
+<ol>
+  <li><strong>绝对不能做什么？</strong>（硬约束）</li>
+  <li><strong>信息不足时怎么办？</strong>（兜底策略）</li>
+  <li><strong>出错了怎么恢复？</strong>（错误处理）</li>
+</ol>
+
+<p>你 study-note skill 里已经有了很好的护栏例：</p>
+<ul>
+  <li>「不得自动修改已有 MOC」← 硬约束</li>
+  <li>「多文件必须列出完整清单，等用户确认」← 兜底策略</li>
+  <li>「无敏感信息（密码/密钥/Token）」← 安全检查</li>
+</ul>
+
+<div class="callout">
+  <strong>一个实用的护栏 checklist：</strong>每次写完 skill，问自己——如果 AI 在这一步做了最蠢的事，我的 skill 里有东西能拦住它吗？
+</div>
+
+<h2>5. 动手练习</h2>
+
+<div class="exercise">
+  <h3>✏️ 练习：用三角框架评估你自己的 skill</h3>
+  <p>打开你的 study-note SKILL.md，用这个 checklist 逐项检查：</p>
+  <ul class="checklist">
+    <li><strong>Trigger</strong>：有没有说清楚<em>不触发</em>的情况？</li>
+    <li><strong>Trigger</strong>：和其他 skill 的触发条件有重叠吗？重叠时 AI 怎么选？</li>
+    <li><strong>Procedure</strong>：每一步是不是只有一个明确的动作？</li>
+    <li><strong>Procedure</strong>：有没有「分析」「处理」「整理」这种模糊动词？</li>
+    <li><strong>Guardrails</strong>：如果搜索不到结果，skill 告诉 AI 该怎么办了吗？</li>
+    <li><strong>Guardrails</strong>：如果用户拒绝了确认，skill 有退路吗？</li>
+  </ul>
+  <p style="margin-top: 1rem; color: var(--muted); font-size: 0.9rem;">
+    💡 在纸上或笔记里写下你找到的 1-3 个可以改进的点。下一课我们会基于这些点来实际改写。
+  </p>
+</div>
+
+<h2>6. 关键收获</h2>
+
+<div class="callout">
+  <strong>本课核心：</strong><br>
+  1. 一个好 skill = 一个约束引擎，每一步都在收窄 AI 的选择空间<br>
+  2. 用 <strong>T-P-G 三角</strong>（Trigger / Procedure / Guardrails）来诊断任何 skill<br>
+  3. <strong>动词模糊 = 选择空间大 = 结果不可控</strong>，把动词换成具体的工具调用<br>
+  4. 护栏不是锦上添花——它是 skill 从「能用」到「可靠」的关键一跳
+</div>
+
+<h2>7. 推荐阅读</h2>
+
+<p>📖 <strong>主阅读：</strong>重新读你 Harness Engineering 笔记里的 6 条原则，但这次带着 T-P-G 框架去读——你会发现每一条原则其实都在强化三角的某个维度。</p>
+
+<p>📖 <strong>延伸：</strong><a href="https://docs.anthropic.com/en/docs/agents-and-tools/agent-skills">Anthropic: Agent Skills 文档</a> — 看官方如何定义 skill 的结构和最佳实践。</p>
+
+<h2>8. 下一课预告</h2>
+
+<p>下一课我们将聚焦 <strong>Context Engineering</strong>：回答你「到底给 AI 什么信息才算好」的问题。你将学到如何判断一段上下文是「有用信息」还是「噪音」。</p>
+
+<div class="nav">
+  <p>
+    <a href="../reference/skill-design-checklist.html">📋 快速参考：Skill 设计检查清单 →</a>
+  </p>
+  <p style="margin-top: 1.5rem;">
+    ❓ 有任何不清楚的地方？<strong>直接问我</strong>。教学 agent 的作用就是在你不确定时帮你理清思路。<br>
+    💬 比如你可以问：「第 2 步的 Procedure Clarity，能不能再看一个例子？」或者「我的 feynman-test skill 的 trigger 够不够精确？」
+  </p>
+  <p style="margin-top: 2rem; font-size: 0.8rem; color: #999;">
+    课程 0001 · 基于 <a href="../MISSION.md">Mission: AI 工作流与 Skills 工程设计</a>
+  </p>
+</div>
+
+</body>
+</html>

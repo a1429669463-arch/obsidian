@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 2 课：查找文件在哪个分支有最新版本</title>
+<style>
+  :root { --text: #1a1a1a; --muted: #555; --accent: #c44; --bg: #fefefe; --code-bg: #f5f2f0; --border: #e0e0e0; --note-bg: #fffbe6; --note-border: #f0d050; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "ET Book","Palatino Linotype","Book Antiqua",Palatino,serif; color: var(--text); background: var(--bg); line-height: 1.7; font-size: 18px; max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  h1 { font-size: 2rem; margin: 0 0 .25rem; font-weight: 700; }
+  h2 { font-size: 1.35rem; margin: 2.5rem 0 .75rem; font-weight: 700; border-bottom: 1px solid var(--border); padding-bottom: .25rem; }
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 .5rem; font-weight: 700; }
+  p, li { margin: 0 0 .75rem; }
+  .subtitle { color: var(--muted); font-size: 1rem; margin-bottom: 1.5rem; }
+  pre { background: var(--code-bg); border-radius: 4px; padding: .85rem 1rem; overflow-x: auto; margin: .75rem 0 1.25rem; font-size: .88rem; line-height: 1.6; border: 1px solid var(--border); }
+  code { font-family: "SF Mono","Fira Code","Consolas",monospace; font-size: .88em; background: var(--code-bg); padding: .1em .3em; border-radius: 2px; }
+  pre code { background: none; padding: 0; }
+  .scenario { background: #f0f7ff; border-left: 4px solid #4a90d9; padding: .85rem 1rem; margin: 1rem 0 1.5rem; border-radius: 0 4px 4px 0; font-size: .95rem; }
+  .scenario strong { color: #2a6cb6; }
+  .note { background: var(--note-bg); border-left: 4px solid var(--note-border); padding: .85rem 1rem; margin: 1rem 0; border-radius: 0 4px 4px 0; font-size: .92rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: .92rem; }
+  th, td { border: 1px solid var(--border); padding: .55rem .75rem; text-align: left; }
+  th { background: #f8f8f8; font-weight: 600; }
+  .quiz { background: #fafafa; border: 1px solid var(--border); border-radius: 6px; padding: 1.25rem; margin: 1.5rem 0; }
+  .quiz h3 { margin-top: 0; font-size: 1rem; }
+  .quiz label { display: block; margin: .4rem 0 .4rem 1.5rem; cursor: pointer; }
+  .quiz input[type="radio"] { margin-right: .4rem; }
+  .quiz button { margin-top: .75rem; padding: .45rem 1.2rem; font-size: .9rem; background: var(--accent); color: #fff; border: none; border-radius: 4px; cursor: pointer; font-family: inherit; }
+  .quiz button:hover { opacity: .88; }
+  .feedback { margin-top: .75rem; padding: .6rem .85rem; border-radius: 4px; display: none; font-size: .92rem; }
+  .feedback.correct { background: #e6f7e6; display: block; }
+  .feedback.wrong { background: #fde8e8; display: block; }
+  .counter { color: var(--muted); font-size: .85rem; }
+  .tag { display: inline-block; background: #eee; padding: .1em .5em; border-radius: 3px; font-size: .8rem; margin-right: .3rem; }
+  .diagram { background: #fafafa; border: 1px solid var(--border); padding: 1rem; margin: 1rem 0 1.5rem; border-radius: 4px; font-family: "SF Mono","Fira Code","Consolas",monospace; font-size: .85rem; line-height: 1.8; white-space: pre; overflow-x: auto; }
+  a { color: var(--accent); }
+  hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0 1rem; }
+  footer { color: var(--muted); font-size: .85rem; margin-top: 2rem; }
+  ol { margin-left: 1.5rem; }
+</style>
+</head>
+<body>
+
+<h1>第 2 课：查找文件在哪个分支有最新版本</h1>
+<p class="subtitle"><span class="tag">分支搜索</span> <span class="tag">git log</span> <span class="tag">场景驱动</span> <span class="counter">约 25 分钟</span></p>
+
+<blockquote class="scenario">
+<strong>真实场景：</strong>你记得前几天在某个分支上改过 <code>HOME.md</code>，加了一段很重要的内容，但忘了是哪个分支。现在你在 main 分支上，怎么快速找到那个"藏了最新版本"的分支？
+</blockquote>
+
+<h2>核心思路：分两步走</h2>
+
+<p>这个问题可以拆成两个独立的小问题：</p>
+
+<ol>
+  <li><strong>找到该文件"最新"的提交是哪一个</strong>（在所有分支中找）</li>
+  <li><strong>看这个提交在哪些分支上</strong></li>
+</ol>
+
+<p>每条命令各解决一步，然后拼起来就是答案。</p>
+
+<hr>
+
+<h2>第一步：找到文件的最新提交</h2>
+
+<p>你平时用的 <code>git log</code> 只看当前分支。加 <code>--all</code> 参数就能搜索所有分支：</p>
+
+<pre><code># 查看所有分支中，某文件的所有提交记录（简洁版）
+git log --all --oneline -- HOME.md</code></pre>
+
+<p>输出大致是这样：</p>
+
+<div class="diagram">b327d45 merge
+6b42c4c 20260615
+f683040 20260508
+a1b2c3d 修复 HOME.md 中的链接
+89ef012 初始导入</div>
+
+<p>最上面那一行就是<strong>最新的提交</strong>。如果只想取这一个：</p>
+
+<pre><code># 只取最新的一条
+git log --all --oneline -1 -- HOME.md</code></pre>
+
+<div class="note">
+<strong>语法说明：</strong>命令末尾的 <code>--</code> 后面跟文件名，告诉 Git"后面的参数是文件路径，不是分支名"。当你的文件名和分支名可能冲突时，这个 <code>--</code> 很重要。养成习惯总是好的。
+</div>
+
+<h3>提取提交哈希（给下一步用）</h3>
+
+<pre><code># 只输出哈希值，不输出其他信息
+git log --all -1 --format=%H -- HOME.md</code></pre>
+
+<p><code>--format=%H</code> 表示"我只要完整的 40 位 commit hash"。这是给脚本和命令组合用的格式。</p>
+
+<table>
+  <tr><th>你想要的</th><th>用这个</th></tr>
+  <tr><td>完整日志，可读性好</td><td><code>git log --all -- HOME.md</code></td></tr>
+  <tr><td>简洁列表，一行一条</td><td><code>git log --all --oneline -- HOME.md</code></td></tr>
+  <tr><td>只要最新一条</td><td><code>git log --all --oneline -1 -- HOME.md</code></td></tr>
+  <tr><td>只要哈希值（给脚本用）</td><td><code>git log --all -1 --format=%H -- HOME.md</code></td></tr>
+</table>
+
+<hr>
+
+<h2>第二步：看这个提交在哪些分支上</h2>
+
+<pre><code># 给定一个 commit hash，看它被哪些分支包含
+git branch --contains &lt;commit-hash&gt;</code></pre>
+
+<p>例如：</p>
+
+<pre><code>$ git branch --contains b327d45
+  feature/update-home
+* main
+  fix/typo</code></pre>
+
+<p><code>*</code> 标记的是你当前所在的分支。如果要包含远程分支：</p>
+
+<pre><code>git branch -a --contains &lt;commit-hash&gt;
+# -a 表示 all，包括远程分支（remotes/origin/xxx）</code></pre>
+
+<hr>
+
+<h2>合并：一行命令搞定</h2>
+
+<p>把上面两步串起来——用 <code>$()</code> 把第一步的结果喂给第二步：</p>
+
+<pre><code># 查找拥有 HOME.md 最新版本的所有分支（含远程）
+git branch -a --contains $(git log --all -1 --format=%H -- HOME.md)</code></pre>
+
+<p>这条命令做了什么：</p>
+
+<div class="diagram">1. git log --all -1 --format=%H -- HOME.md
+   → 输出 b327d45e...（HOME.md 最新提交的哈希）
+
+2. git branch -a --contains b327d45e...
+   → 列出所有包含这个提交的分支
+
+  结果是：拥有该文件最新版本的分支列表</div>
+
+<div class="note">
+<strong>如果输出为空？</strong>说明这个提交不在任何命名分支上——可能是 detached HEAD 状态下的提交，或者该分支已经被删除了。可以用 <code>git reflog</code> 找回来，这个后面会讲。
+</div>
+
+<hr>
+
+<h2>进阶：不止要看"最新的"，还要看"每个分支上是什么样的"</h2>
+
+<p>上面的方法只回答了"哪个分支有最新版本"。有时候你还想知道每个分支各自的版本差异：</p>
+
+<pre><code># 列出所有本地分支，并显示该文件在每个分支上的最近一次提交
+git log --all --oneline --graph -- HOME.md</code></pre>
+
+<p><code>--graph</code> 会用 ASCII 画出分支分叉的拓扑图，一眼能看出来文件在不同分支上的演化路径。</p>
+
+<p>另一个有用命令——检查某个文件是否存在于某个分支上：</p>
+
+<pre><code># 列出 feature/xxx 分支上的 HOME.md
+git ls-tree -r feature/update-home -- HOME.md
+
+# 如果输出为空 → 这个分支上没有这个文件
+# 如果有输出 → 会显示文件的 blob 哈希和路径</code></pre>
+
+<hr>
+
+<h2>场景总结：根据你的问题选命令</h2>
+
+<table>
+  <tr><th>你想知道什么</th><th>命令</th></tr>
+  <tr><td>这个文件在所有分支上的提交历史</td><td><code>git log --all --oneline -- &lt;file&gt;</code></td></tr>
+  <tr><td>哪个分支有这文件的最新版本</td><td><code>git branch --contains $(git log --all -1 --format=%H -- &lt;file&gt;)</code></td></tr>
+  <tr><td>某个特定分支上有没有这个文件</td><td><code>git ls-tree -r &lt;branch&gt; -- &lt;file&gt;</code></td></tr>
+  <tr><td>所有分支上这文件的演化图</td><td><code>git log --all --oneline --graph -- &lt;file&gt;</code></td></tr>
+  <tr><td>这文件在另一个分支上内容是什么</td><td><code>git show &lt;branch&gt;:&lt;file&gt;</code></td></tr>
+</table>
+
+<hr>
+
+<h2>动手练习</h2>
+
+<div class="quiz" id="q1">
+<h3>练习 1：选命令</h3>
+<p>你想知道 <code>README.md</code> 在 <strong>所有分支上</strong> 的提交记录（一行一条），命令是：</p>
+<label><input type="radio" name="q1" value="a"><code>git log --all --oneline -- README.md</code></label>
+<label><input type="radio" name="q1" value="b"><code>git log --oneline -- README.md</code></label>
+<label><input type="radio" name="q1" value="c"><code>git log --all -- README.md</code></label>
+<label><input type="radio" name="q1" value="d"><code>git branch --all README.md</code></label>
+<button onclick="checkQ1()">提交</button>
+<div class="feedback" id="q1fb"></div>
+</div>
+
+<div class="quiz" id="q2">
+<h3>练习 2：理解 --</h3>
+<p>以下命令中的 <code>--</code> 起什么作用？</p>
+<pre><code>git log --all --oneline -- HOME.md</code></pre>
+<label><input type="radio" name="q2" value="a">注释，后面的内容被忽略</input></label>
+<label><input type="radio" name="q2" value="b">分隔"选项"和"文件路径"，防止文件名被误解析为分支名</label>
+<label><input type="radio" name="q2" value="c">表示"从这个提交开始往前查"</label>
+<label><input type="radio" name="q2" value="d">显示 diff 上下文</label>
+<button onclick="checkQ2()">提交</button>
+<div class="feedback" id="q2fb"></div>
+</div>
+
+<div class="quiz" id="q3">
+<h3>练习 3：真实操作</h3>
+<p>在你当前的 Obsidian vault 仓库里实操：</p>
+<ol>
+  <li>用 <code>git log --all --oneline -- HOME.md</code> 查看 HOME.md 在所有分支上的提交</li>
+  <li>如果是多分支仓库，用组合命令找出哪个分支有 HOME.md 的最新版本</li>
+  <li>找一个你确定存在的文件，用 <code>git show &lt;另一个分支名&gt;:&lt;文件路径&gt;</code> 看看它在别的分支上内容一样不一样</li>
+</ol>
+<p>如果当前仓库只有一个 main 分支，可以先用 <code>git checkout -b test-search</code> 创建一个测试分支，改一下文件，切回 main，再搜。（别忘了之后可以 <code>git branch -d test-search</code> 删掉）</p>
+</div>
+
+<hr>
+
+<h2>本节要点</h2>
+<ul>
+  <li><code>git log --all</code> 搜索所有分支，不只是当前分支</li>
+  <li><code>--</code> 分隔选项和文件路径，防止歧义</li>
+  <li><code>git branch --contains &lt;hash&gt;</code> 反向查找——给定一个提交，找它属于哪些分支</li>
+  <li><code>$()</code> 把命令的输出嵌入到另一条命令中，实现组合</li>
+  <li>组合拳：<code>git branch --contains $(git log --all -1 --format=%H -- &lt;file&gt;)</code></li>
+</ul>
+
+<h2>推荐阅读</h2>
+<ul>
+  <li><a href="https://git-scm.com/docs/git-log">git log 官方文档</a> — 搜索选项和格式化的完整参考</li>
+  <li><a href="https://git-scm.com/docs/git-branch">git branch 官方文档</a> — --contains 和其他分支过滤选项</li>
+  <li><a href="../reference/git-scenario-cheatsheet.html">📋 Git 场景速查表</a>（已更新第 2 课命令）</li>
+</ul>
+
+<hr>
+<footer>
+<p>有问题直接追问：</p>
+<ul>
+  <li>"git log --all 搜不搜远程分支？"</li>
+  <li>"如果想找这个文件所有版本分别在哪些分支上，不是只看最新的？"</li>
+  <li>"$() 和反引号 `` 有什么区别？"</li>
+</ul>
+<p style="margin-top:1rem;"><a href="0001-git-ignore-and-untrack.html">← 第 1 课</a> · <a href="0002-find-file-across-branches.html">第 2 课</a> · 第 3 课（即将发布）→ · <a href="../reference/git-scenario-cheatsheet.html">📋 速查表</a></p>
+</footer>
+
+<script>
+function checkQ1(){var f=document.getElementById('q1fb'),s=document.querySelector('input[name="q1"]:checked');if(!s){f.className='feedback wrong';f.textContent='请先选一个选项。';return}if(s.value==='a'){f.className='feedback correct';f.textContent='✅ 正确！--all 搜所有分支，--oneline 一行一条，-- 后跟文件路径。'}else{f.className='feedback wrong';if(s.value==='b')f.textContent='❌ 少了 --all，只会搜当前分支。';else if(s.value==='c')f.textContent='⚠️ 方向对了，但缺少 --oneline，输出会很冗长。';else f.textContent='❌ git branch --all 不会显示提交历史。'}}
+function checkQ2(){var f=document.getElementById('q2fb'),s=document.querySelector('input[name="q2"]:checked');if(!s){f.className='feedback wrong';f.textContent='请先选一个选项。';return}if(s.value==='b'){f.className='feedback correct';f.textContent='✅ 正确！-- 是 Git 命令中的标准分隔符，确保后面的参数被解释为文件路径而非分支名或选项。'}else{f.className='feedback wrong';f.textContent='❌ 不对。-- 在很多 Unix 工具中都是"选项结束，后面是位置参数"的标记。'}}
+</script>
+</body>
+</html>

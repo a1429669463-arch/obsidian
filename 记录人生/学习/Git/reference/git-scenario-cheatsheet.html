@@ -28,9 +28,9 @@
 <body>
 
 <h1>Git 场景速查表</h1>
-<p class="subtitle">覆盖第 1 课的命令 · 持续更新中 · <a href="../lessons/0001-git-ignore-and-untrack.html">← 返回第 1 课</a></p>
+<p class="subtitle">第 1–2 课命令速查 · <a href="../lessons/0001-git-ignore-and-untrack.html">第 1 课</a> · <a href="../lessons/0002-find-file-across-branches.html">第 2 课</a></p>
 
-<h2>文件忽略与取消跟踪</h2>
+<h2>第 1 课 · 文件忽略与取消跟踪</h2>
 
 <div class="entry">
   <div class="cmd"><code>echo "file" &gt;&gt; .gitignore</code></div>
@@ -57,6 +57,43 @@
 <div class="note">
   git status 看到文件 → Untracked? → .gitignore<br>
   git status 看到文件 → modified? → skip-worktree（临时）或 rm --cached（永久）
+</div>
+
+<h2>第 2 课 · 跨分支查找文件</h2>
+
+<div class="entry">
+  <div class="cmd"><code>git log --all --oneline -- &lt;file&gt;</code></div>
+  <div class="desc">查看文件在<strong>所有分支</strong>上的提交历史（一行一条）</div>
+</div>
+<div class="entry">
+  <div class="cmd"><code>git log --all -1 --format=%H -- &lt;file&gt;</code></div>
+  <div class="desc">只取该文件<strong>最新提交</strong>的完整哈希值</div>
+</div>
+<div class="entry">
+  <div class="cmd"><code>git branch --contains &lt;hash&gt;</code></div>
+  <div class="desc">给定提交哈希，列出包含它的所有<strong>本地分支</strong></div>
+</div>
+<div class="entry">
+  <div class="cmd"><code>git branch -a --contains $(git log --all -1 --format=%H -- &lt;file&gt;)</code></div>
+  <div class="desc"><strong>一行命令</strong>：找拥有该文件最新版本的<strong>所有分支（含远程）</strong></div>
+</div>
+<div class="entry">
+  <div class="cmd"><code>git log --all --oneline --graph -- &lt;file&gt;</code></div>
+  <div class="desc">可视化文件在各分支上的演化路径（ASCII 拓扑图）</div>
+</div>
+<div class="entry">
+  <div class="cmd"><code>git show &lt;branch&gt;:&lt;file&gt;</code></div>
+  <div class="desc">直接查看文件<strong>在指定分支上的内容</strong>（不用切分支）</div>
+</div>
+<div class="entry">
+  <div class="cmd"><code>git ls-tree -r &lt;branch&gt; -- &lt;file&gt;</code></div>
+  <div class="desc">检查文件是否<strong>存在于</strong>指定分支上</div>
+</div>
+
+<h2>组合命令模式</h2>
+<div class="note">
+  把 A 命令的输出喂给 B 命令 → 用 <code>$(...)</code> 或管道 <code>|</code><br>
+  <code>git branch --contains $(git log --all -1 --format=%H -- file)</code>
 </div>
 
 <footer>

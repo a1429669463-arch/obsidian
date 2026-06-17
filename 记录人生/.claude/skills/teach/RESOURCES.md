@@ -19,8 +19,14 @@
 - [Claude Code 官方 Discord](https://discord.gg/anthropic)
   官方 Discord，有 skill 设计频道。Use for：skill 问题的实时反馈。
 
+- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
+  Anthropic 官方 Agent 设计指南，定义六种工作流模式（Prompt Chaining / Routing / Parallelization / Orchestrator-Workers / Evaluator-Optimizer / Autonomous Agent）和「简单优先」原则。Use for：工作流设计模式的权威参考、判断何时该用 Agent vs Workflow。
+
+- [GitHub: slavakurilyak/building-effective-agents](https://github.com/slavakurilyak/building-effective-agents)
+  Anthropic 六种模式的多种框架实现（pydanticAI, crewAI, instructor 等）。Use for：看同一模式在不同框架下的实现差异。
+
 ## Gaps
 
 - 缺少 GitHub Copilot skill-creator 的详细文档——用户工作中使用 Copilot，需要补充这部分资源
 - 缺少中文社区资源——中文环境下关于 AI skill 设计的讨论较少
-- 缺少 MCP 实战教程——用户尚未接触 MCP 实战，后续需要补充
+- MCP 实战教程已通过第 6-7 课覆盖 ✅

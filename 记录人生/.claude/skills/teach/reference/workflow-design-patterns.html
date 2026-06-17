@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工作流设计模式速查卡</title>
+<style>
+  :root {
+    --text: #1a1a1a; --muted: #555; --accent: #c44; --bg: #fefefe;
+    --border: #e0ddd8; --stripe: #fafaf7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Noto Sans SC", sans-serif;
+    color: var(--text); background: var(--bg);
+    max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem 4rem;
+  }
+  h1 { font-size: 1.5rem; margin-bottom: 0.2rem; }
+  .subtitle { color: var(--muted); margin-bottom: 2rem; font-size: 0.9rem; }
+  h2 { font-size: 1.05rem; margin: 1.8rem 0 0.5rem; padding-bottom: 0.25rem; border-bottom: 2px solid var(--accent); }
+
+  .pattern {
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 0.8rem 1rem; margin: 0.8rem 0;
+    background: #fcfcf9; page-break-inside: avoid;
+  }
+  .pattern h3 { font-size: 0.95rem; margin-bottom: 0.15rem; }
+  .pattern .when { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.3rem; }
+  .pattern .diagram {
+    font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    font-size: 0.72rem; line-height: 1.6; white-space: pre;
+    background: #fff; padding: 0.5rem 0.7rem; border-radius: 4px;
+    border: 1px solid var(--border); margin: 0.4rem 0;
+  }
+
+  .tag {
+    display: inline-block; font-size: 0.62rem; padding: 0.1em 0.4em; border-radius: 3px;
+    margin-right: 0.2em; font-weight: 600; vertical-align: middle;
+  }
+  .tag-pipe { background: #e8f0fe; color: #36c; }
+  .tag-route { background: #fff3e0; color: #e65100; }
+  .tag-fan { background: #e8f5e9; color: #2e7d32; }
+  .tag-orch { background: #f3e5f5; color: #7b1fa2; }
+  .tag-eo { background: #fce4ec; color: #c62828; }
+  .tag-human { background: #e0f2f1; color: #00695c; }
+
+  .principles {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem;
+    margin: 0.8rem 0;
+  }
+  .principle {
+    border: 1px solid var(--border); border-radius: 5px;
+    padding: 0.5rem 0.7rem; font-size: 0.82rem;
+    background: var(--stripe);
+  }
+  .principle strong { color: var(--accent); }
+
+  .flow {
+    background: #fff; border: 1px solid var(--border); border-radius: 6px;
+    padding: 0.8rem 1rem; margin: 0.8rem 0;
+    font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    font-size: 0.74rem; line-height: 1.8; white-space: pre;
+  }
+
+  .note { font-size: 0.82rem; color: var(--muted); margin: 0.5rem 0; font-style: italic; }
+
+  @media print {
+    body { font-size: 10pt; padding: 1rem; }
+    h1 { font-size: 14pt; }
+    .pattern { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>📋 工作流设计模式速查卡</h1>
+<p class="subtitle">六种基础模式 + 设计原则 + 决策流程 · 搭配 <a href="../lessons/0010-workflow-design-thinking.html">第 10 课</a> 使用</p>
+
+<h2>六种基础模式</h2>
+
+<div class="pattern">
+  <h3><span class="tag tag-pipe">Pipeline</span> 链式管道</h3>
+  <p class="when"><strong>何时用：</strong>任务有天然先后依赖。上一步输出 = 下一步输入。</p>
+  <div class="diagram">  [A] → [gate] → [B] → [gate] → [C]</div>
+  <p style="font-size:0.82rem;"><strong>你的例子：</strong>study-note 的 搜索→规划→写入→检查。</p>
+</div>
+
+<div class="pattern">
+  <h3><span class="tag tag-route">Routing</span> 路由分流</h3>
+  <p class="when"><strong>何时用：</strong>同一入口，不同意图，需要不同处理。分类必须可靠。</p>
+  <div class="diagram">  输入 ─┬→ 类型A → 处理A
+       ├→ 类型B → 处理B
+       └→ 类型C → 处理C</div>
+  <p style="font-size:0.82rem;"><strong>你的例子：</strong>「学习XX」→ study-note，「考考我」→ feynman-test。</p>
+</div>
+
+<div class="pattern">
+  <h3><span class="tag tag-fan">Fan-out</span> 并行扇出</h3>
+  <p class="when"><strong>何时用：</strong>子任务之间无依赖，可同时进行。结果汇总。</p>
+  <div class="diagram">       ┌→ [A] ─┐
+  起点 ─┼→ [B] ─┼→ 汇总 → 输出
+       └→ [C] ─┘</div>
+  <p style="font-size:0.82rem;"><strong>两种变体：</strong>Sectioning（各做各的）/ Voting（同一任务多票）。</p>
+</div>
+
+<div class="pattern">
+  <h3><span class="tag tag-orch">Orchestrator</span> 编排-工人</h3>
+  <p class="when"><strong>何时用：</strong>任务复杂到无法事先规划所有子步骤，需动态分解。</p>
+  <div class="diagram">  Orchestrator: 分析 → 分解 → 分配
+       ├→ Worker 1（动态确定的子任务）
+       ├→ Worker 2（动态确定的子任务）
+       └→ Worker N
+  Orchestrator: 合成 → 输出</div>
+  <p style="font-size:0.82rem;"><strong>与 Fan-out 区别：</strong>子任务是运行时动态决定的，不是预先列好的。</p>
+</div>
+
+<div class="pattern">
+  <h3><span class="tag tag-eo">Eval-Opt</span> 评估-优化</h3>
+  <p class="when"><strong>何时用：</strong>有明确可验证的质量标准。可自动评估时效果最好。</p>
+  <div class="diagram">  生成 → 评估 → 不通过？→ 带着反馈重新生成
+                → 通过？  → 输出</div>
+  <p style="font-size:0.82rem;"><strong>你的例子：</strong>study-note 第 5 步对照 checklist 检查 = 手动版 E-O。</p>
+</div>
+
+<div class="pattern">
+  <h3><span class="tag tag-human">Human-in-Loop</span> 人机回路</h3>
+  <p class="when"><strong>何时用：</strong>后果不可逆、AI 置信度低、或需要人的偏好做决策。</p>
+  <div class="diagram">  AI 规划 → [等待确认] → AI 执行 → [等待确认] → 继续</div>
+  <p style="font-size:0.82rem;"><strong>本质：</strong>不是在加确认步骤，是在设计信任边界。</p>
+</div>
+
+<h2>通用设计原则</h2>
+
+<div class="principles">
+  <div class="principle"><strong>一步一动作</strong> — 每步只做一件事，有明确 I/O</div>
+  <div class="principle"><strong>原子性</strong> — 要么完整成功，要么完整失败</div>
+  <div class="principle"><strong>显式 I/O</strong> — 上一步输出 = 下一步输入，不靠推断</div>
+  <div class="principle"><strong>幂等性</strong> — 重试不会产生副作用</div>
+  <div class="principle"><strong>Fail-safe 默认</strong> — 出错时停下来问，不猜</div>
+  <div class="principle"><strong>不可见步骤</strong> — 人自动跳过但 AI 不会的步骤要显式写</div>
+</div>
+
+<h2>设计思维流程（5 层）</h2>
+
+<div class="flow">
+第 1 层：分解（HTA）
+  → 「这个任务从开始到结束，要经历哪几个阶段？」
+  → 画出 3-7 个顶层步骤
+
+第 2 层：选模式（6 Patterns）
+  → 「每一步之间是什么关系？顺序？并行？分支？循环？」
+
+第 3 层：加护栏（Guardrails）
+  → 「每一步最蠢的失败方式是什么？拦住了吗？」
+
+第 4 层：定边界（Trust Boundary）
+  → 「哪些决定 AI 自己做？哪些必须问人？」
+
+第 5 层：补不可见步骤
+  → 「我自己做这件事时，做了哪些没意识到的判断？」
+</div>
+
+<p class="note">打印版本：本页设计为打印友好，可直接打印成纸质速查卡使用。搭配 <a href="skill-design-checklist.html">Skill 设计检查清单</a> 一起效果更好。</p>
+
+</body>
+</html>

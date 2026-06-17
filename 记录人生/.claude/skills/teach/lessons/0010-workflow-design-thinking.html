@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 10 课：工作流设计思想 — 从问题到流程的思维框架</title>
+<style>
+  :root {
+    --text: #1a1a1a; --muted: #555; --accent: #c44; --bg: #fefefe;
+    --code-bg: #f4f2f0; --border: #e0ddd8; --highlight: #fff8e1;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: Georgia, "Noto Serif CJK SC", "Source Han Serif SC", serif;
+    color: var(--text); background: var(--bg);
+    line-height: 1.75; max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem 6rem;
+  }
+  h1 { font-size: 1.65rem; line-height: 1.3; margin-bottom: 0.3rem; font-family: -apple-system, "PingFang SC", sans-serif; }
+  h2 { font-size: 1.15rem; margin: 2.2rem 0 0.6rem; padding-top: 0.9rem; border-top: 1px solid var(--border); font-family: -apple-system, "PingFang SC", sans-serif; }
+  h3 { font-size: 1rem; margin: 1.3rem 0 0.4rem; font-family: -apple-system, "PingFang SC", sans-serif; }
+  p { margin: 0.65rem 0; }
+  .subtitle { color: var(--muted); font-size: 0.95rem; margin-bottom: 0.3rem; font-style: italic; }
+  .meta { font-size: 0.83rem; color: var(--muted); margin-bottom: 2rem; }
+  .meta span { margin-right: 1.3rem; }
+
+  .callout {
+    margin: 1.2rem 0; padding: 0.85rem 1rem;
+    border-left: 3px solid var(--accent); background: var(--highlight);
+    border-radius: 0 4px 4px 0; font-size: 0.9rem;
+  }
+  .callout strong { color: var(--accent); }
+
+  pre {
+    background: var(--code-bg); padding: 0.7rem 0.9rem; border-radius: 5px;
+    overflow-x: auto; font-size: 0.8rem; line-height: 1.5; margin: 0.8rem 0;
+    border: 1px solid var(--border);
+  }
+  code { font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace; font-size: 0.86em; }
+  pre code { font-size: 0.8rem; }
+
+  details {
+    margin: 0.8rem 0; padding: 0.7rem 0.9rem;
+    background: #fafaf8; border: 1px solid var(--border); border-radius: 5px;
+  }
+  details summary {
+    cursor: pointer; font-weight: 600;
+    font-family: -apple-system, "PingFang SC", sans-serif; color: var(--accent);
+  }
+  details summary:hover { text-decoration: underline; }
+  details .answer { margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed var(--border); }
+
+  table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.84rem; }
+  th { text-align: left; padding: 0.4rem 0.5rem; border-bottom: 2px solid var(--border); font-size: 0.75rem; color: var(--muted); }
+  td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: #fcfcfa; }
+
+  .diagram {
+    margin: 1.2rem 0; padding: 0.9rem 1rem;
+    background: #fff; border: 1px solid var(--border); border-radius: 6px;
+    font-family: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    font-size: 0.76rem; line-height: 1.7; white-space: pre;
+    overflow-x: auto;
+  }
+
+  .pattern-card {
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 0.7rem 0.9rem; margin: 0.7rem 0;
+    background: #fcfcf9;
+  }
+  .pattern-card h4 {
+    margin: 0 0 0.2rem; font-family: -apple-system, "PingFang SC", sans-serif;
+    font-size: 0.9rem;
+  }
+
+  .tag {
+    display: inline-block; font-size: 0.65rem; padding: 0.1em 0.4em; border-radius: 3px;
+    margin-right: 0.25em; font-weight: 600; vertical-align: middle;
+  }
+  .tag-pipe { background: #e8f0fe; color: #36c; }
+  .tag-route { background: #fff3e0; color: #e65100; }
+  .tag-fan { background: #e8f5e9; color: #2e7d32; }
+  .tag-orch { background: #f3e5f5; color: #7b1fa2; }
+  .tag-eo { background: #fce4ec; color: #c62828; }
+  .tag-human { background: #e0f2f1; color: #00695c; }
+
+  .exercise {
+    background: #f8f8f6; border: 1px dashed var(--border);
+    padding: 1rem 1.1rem; border-radius: 6px; margin: 1.2rem 0;
+  }
+  .exercise h3 { margin-top: 0; color: var(--accent); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.04em; }
+
+  .nav { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.87rem; color: var(--muted); }
+  .nav a { color: var(--accent); }
+
+  .step-num {
+    display: inline-block; width: 1.6em; height: 1.6em; line-height: 1.6em;
+    text-align: center; background: var(--accent); color: #fff;
+    border-radius: 50%; font-size: 0.8rem; font-weight: 700;
+    font-family: -apple-system, "PingFang SC", sans-serif;
+    margin-right: 0.4em; vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<h1>第 10 课：工作流设计思想</h1>
+<p class="subtitle">从「会用工具」到「会设计」——面对空白需求时，如何思考出合理的工作流</p>
+<p class="meta">
+  <span>📅 2026-06-17</span>
+  <span>⏱ ~25 分钟</span>
+  <span>← <a href="0009-prompt-caching-cache-hit-rate.html">第 9 课</a></span>
+  <span>🎯 <a href="../MISSION.md">Mission →</a></span>
+</p>
+
+<h2>1. 你已经有了所有工具。现在缺什么？</h2>
+
+<p>回顾前 9 课，你掌握了：</p>
+
+<ul>
+  <li><strong>T-P-G 三角</strong>：诊断任何 skill 好坏的框架</li>
+  <li><strong>调度与组合</strong>：独立并行 / 链式调用 / Workflow 编排三种模式</li>
+  <li><strong>Context Engineering</strong>：信息密度公式、预算测试、渐进式披露</li>
+  <li><strong>五步闭环</strong>：设计 → 测试 → 观察 → 诊断 → 修复</li>
+  <li><strong>MCP + Hooks + 缓存</strong>：何时用哪个、怎么配、怎么优化</li>
+</ul>
+
+<p>这些都是<strong>执行层的工具</strong>。但是——</p>
+
+<div class="callout">
+  <strong>面对一个全新的自动化需求，你的第一反应是什么？</strong><br><br>
+  如果你先想「我用 T-P-G 来检查」「我用五步闭环来迭代」——那你已经在用工具了。但在这之前，有一个更根本的问题：<br><br>
+  <strong>这个需求应该被拆成什么样的工作流？为什么拆成这样而不是那样？</strong>
+</div>
+
+<p>这就是<strong>设计思想</strong>——在拿起工具之前，先建立问题的形状。</p>
+
+<h2>2. 第一性原理：工作流 = 约束的序列</h2>
+
+<p>回忆第 1 课的核心洞察：<strong>好的 skill 是一个约束引擎，每一步都在收窄 AI 的选择空间。</strong></p>
+
+<p>把它提升一层：</p>
+
+<div class="callout">
+  <strong>工作流设计的本质 = 把一个复杂问题分解成一系列子问题，每个子问题小到 AI 只有一种正确的做法。</strong><br><br>
+  不是「AI 应该怎么做」——那是给指令。<br>
+  而是「把问题切成什么形状，AI 才不会做错」——那是做设计。
+</div>
+
+<p>这意味着：<strong>你的主要工作不是写 prompt，是设计问题的分解结构。</strong>分解得好，每一段的 prompt 可以很简单。分解得不好，prompt 写再多也兜不住。</p>
+
+<h2>3. 思维工具一：层级任务分解（HTA）</h2>
+
+<p>HTA（Hierarchical Task Analysis）是人因工程学最经典的任务分解方法。它问一个递归的问题：</p>
+
+<div class="callout">
+  <strong>「要完成这一步，需要先完成哪些子步骤？」</strong><br>
+  一级一级往下拆，直到每个子步骤都简单到<strong>不可再分</strong>——也就是 AI 能无歧义执行的动作。
+</div>
+
+<p>以你的 study-note skill 为例，用 HTA 的视角看它的设计：</p>
+
+<div class="diagram">
+0. 创建一篇学习笔记
+│
+├── 1. 搜索已有笔记（防重复）
+│   ├── 1a. 从用户问题提取关键词
+│   ├── 1b. Grep 搜索知识库
+│   └── 1c. 判断是否已存在 → 存在则告知用户，不存在则继续
+│
+├── 2. 网络搜索获取知识
+│   ├── 2a. WebSearch 搜索（1-2 次）
+│   ├── 2b. WebFetch 获取关键页面详情
+│   └── 2c. 判断信息是否足够 → 不够则补充搜索
+│
+├── 3. 规划文件结构
+│   ├── 3a. 判断应该是一个文件还是多个文件
+│   ├── 3b. 列出文件清单
+│   └── 3c. 等待用户确认
+│
+├── 4. 按规范写入
+│   ├── 4a. 写 frontmatter（date + tags）
+│   ├── 4b. 写一句话定义
+│   ├── 4c. 写正文
+│   ├── 4d. 写参考文献
+│   └── 4e. 写相关笔记 [[wikilink]]
+│
+└── 5. 最终检查
+    ├── 5a. 对照 note-rules.md 逐项检查
+    └── 5b. 报告结果
+</div>
+
+<p>注意几个设计决策：</p>
+
+<ul>
+  <li><strong>第 1 步和第 2 步有先后</strong>——先查本地再搜网络（省成本、防重复）。这是 Pipeline 模式。</li>
+  <li><strong>第 4a-4e 是顺序固定</strong>——因为每项内容不同，不需要并行。</li>
+  <li><strong>第 3c 插入了人</strong>——不可逆操作（写入多个文件）前必须确认。这是 Human-in-the-Loop。</li>
+</ul>
+
+<p>这些决策不是「按模板填的」——它们是<strong>基于问题本质做的设计选择</strong>。</p>
+
+<h2>4. 思维工具二：六种工作流设计模式</h2>
+
+<p>HTA 帮你拆问题。但拆完之后，子步骤之间<strong>怎么组织</strong>？这里有六种可复用的模式。它们是 Anthropic「Building Effective Agents」中总结的基础构件，加上传统工作流引擎中最核心的补偿模式。</p>
+
+<h3>模式 1：Pipeline（链式管道）<span class="tag tag-pipe">顺序</span></h3>
+
+<div class="pattern-card">
+  <h4>每一步的产出 = 下一步的输入。有严格的先后顺序。</h4>
+  <div class="diagram">
+  [搜索] → [阅读] → [分析] → [写入]
+  每个 gate 可以检查上一步的输出质量，不达标就重做
+  </div>
+  <p><strong>何时用：</strong>任务天然有先后依赖。上一步的结果决定下一步做什么。</p>
+  <p><strong>你的 study-note 就是 Pipeline：</strong>搜索 → 规划 → 写入 → 检查。不能跳过搜索直接写。</p>
+</div>
+
+<h3>模式 2：Routing（路由分流）<span class="tag tag-route">分支</span></h3>
+
+<div class="pattern-card">
+  <h4>根据输入特征，分流到不同的处理路径。</h4>
+  <div class="diagram">
+  用户请求
+    │
+    ├── 「学习 XX」    → study-note
+    ├── 「考考我」      → feynman-test
+    └── 「深入研究 XX」 → deep-research
+  </div>
+  <p><strong>何时用：</strong>同一入口，不同意图，需要不同处理。分类必须准确——如果分类器经常搞错，Routing 反而增加错误。</p>
+  <p><strong>在 Skill 内部也能用：</strong>比如 study-note 判断「是一个文件还是多个文件」→ 走不同写入路径。</p>
+</div>
+
+<h3>模式 3：Parallelization / Fan-out（并行扇出）<span class="tag tag-fan">并行</span></h3>
+
+<div class="pattern-card">
+  <h4>多个独立子任务同时进行，结果汇总。</h4>
+  <div class="diagram">
+          ┌→ 查资料 A ──┐
+  一个需求 ──┼→ 查资料 B ──┼→ 汇总 → 写入
+          └→ 查资料 C ──┘
+  </div>
+  <p><strong>何时用：</strong>子任务之间<strong>没有依赖关系</strong>，各自独立。</p>
+  <p><strong>两种变体：</strong>(1) Sectioning — 不同子任务各做各的；(2) Voting — 同一个任务做多次，取多数意见。</p>
+  <p><strong>第 2 课学到的独立并行模式就是 Fan-out 的特例</strong>——Agent 分两轮激活不同 skill。</p>
+</div>
+
+<h3>模式 4：Orchestrator-Workers（编排-工人）<span class="tag tag-orch">动态</span></h3>
+
+<div class="pattern-card">
+  <h4>一个中央编排者动态分解任务，分配给多个工人，最后合成结果。</h4>
+  <div class="diagram">
+  Orchestrator: 「用户要学习 MCP + Hooks 的关系」
+    │
+    ├→ Worker 1: 研究 MCP 的概念和用途
+    ├→ Worker 2: 研究 Hooks 的概念和用途
+    └→ Worker 3: 研究两者的配合模式
+    │
+  Orchestrator: 合成三份结果 → 检查一致性 → 写成笔记
+  </div>
+  <p><strong>何时用：</strong>任务复杂到<strong>无法事先确定需要多少子任务</strong>，需要动态分解。</p>
+  <p><strong>与 Fan-out 的区别：</strong>Fan-out 的子任务是事先确定的；Orchestrator-Workers 的子任务是运行时动态决定的。</p>
+</div>
+
+<h3>模式 5：Evaluator-Optimizer（评估-优化循环）<span class="tag tag-eo">迭代</span></h3>
+
+<div class="pattern-card">
+  <h4>一个生成，一个评估。评估不通过就重新生成，直到通过。</h4>
+  <div class="diagram">
+  生成 ──→ 评估 ──→ 不通过？→ 带着反馈回到生成
+            │
+            通过？→ 输出
+  </div>
+  <p><strong>何时用：</strong>有<strong>明确的、可验证的质量标准</strong>。评估可以自动化时效果最好。</p>
+  <p><strong>你已经在用了：</strong>study-note 的第 5 步「对照 checklist 逐项检查」就是一个手动版的 Evaluator-Optimizer。如果能把 checklist 变成自动检查（比如检查 frontmatter 格式、检查是否有参考文献），就是完全自动化。</p>
+</div>
+
+<h3>模式 6：Human-in-the-Loop（人机回路）<span class="tag tag-human">确认</span></h3>
+
+<div class="pattern-card">
+  <h4>关键节点插入人工确认，确认后才继续。</h4>
+  <div class="diagram">
+  AI 规划 → [等待用户确认] → AI 执行 → [等待用户确认] → 继续
+  </div>
+  <p><strong>何时用：</strong>后果不可逆（写入文件、修改配置、花费金钱）、AI 判断置信度低、或需要人的偏好做决策。</p>
+  <p><strong>你不是在「加入确认步骤」——你是在设计<strong>信任边界</strong>。</strong>哪些决定 AI 可以做？哪些必须人来做？这个边界的划分，是工作流设计中最核心的判断之一。</p>
+</div>
+
+<h2>5. 决策框架：你面对一个新需求时，先问什么？</h2>
+
+<p>六种模式不是互斥的——一个完整的 skill 通常组合使用多种模式。但你需要一个<strong>启动思考的顺序</strong>：</p>
+
+<div class="callout">
+  <p><span class="step-num">1</span> <strong>这个任务有天然的顺序依赖吗？</strong><br>
+  有 → Pipeline。子步骤的产出决定下一步做什么。</p>
+
+  <p><span class="step-num">2</span> <strong>有可以同时做的独立子任务吗？</strong><br>
+  有 → Fan-out。但要确保子任务之间真的没有隐性依赖。</p>
+
+  <p><span class="step-num">3</span> <strong>任务复杂到无法事先规划所有步骤吗？</strong><br>
+  是 → Orchestrator-Workers。让 AI 动态分解。</p>
+
+  <p><span class="step-num">4</span> <strong>有客观的质量标准可以反复检查吗？</strong><br>
+  有 → Evaluator-Optimizer。生成-评估循环。</p>
+
+  <p><span class="step-num">5</span> <strong>哪些步骤的后果不可逆？</strong><br>
+  每个不可逆步骤前 → Human-in-the-Loop。</p>
+
+  <p><span class="step-num">6</span> <strong>输入有不同类别需要不同处理吗？</strong><br>
+  有 → Routing。但要确保分类本身可靠。</p>
+</div>
+
+<p>这个顺序不是教条——它是<strong>一个启动思维的习惯</strong>。用得多了，你会自然地在脑中跑这个检查清单，甚至开始凭直觉判断。</p>
+
+<h2>6. 设计原则：跨模式通用的判断力</h2>
+
+<p>以下原则不绑定任何模式，但在<strong>每种</strong>模式中都适用。它们是你做设计决策时的「宪法」。</p>
+
+<table>
+  <tr><th>原则</th><th>含义</th><th>违反时的症状</th></tr>
+  <tr>
+    <td><strong>一步一动作</strong></td>
+    <td>每个步骤只做一件事，有明确的输入和输出</td>
+    <td>AI 在某一步「自由发挥」，结果不可预测</td>
+  </tr>
+  <tr>
+    <td><strong>原子性</strong></td>
+    <td>一步要么完整成功，要么完整失败。不存在「做了一半」</td>
+    <td>文件写了一半停了，状态不一致</td>
+  </tr>
+  <tr>
+    <td><strong>显式 I/O</strong></td>
+    <td>每一步的输入来源和输出去向明确标注。上一步的输出 = 下一步的输入</td>
+    <td>中间步骤的产物丢失，后续步骤重新推断</td>
+  </tr>
+  <tr>
+    <td><strong>幂等性</strong></td>
+    <td>同一步执行多次，效果和执行一次一样</td>
+    <td>重试时创建了重复文件 / 重复操作</td>
+  </tr>
+  <tr>
+    <td><strong>Fail-safe 默认</strong></td>
+    <td>出错了默认采取最安全的做法（停下来问用户），而非最省事的做法（猜一个继续）</td>
+    <td>AI 在不确定时猜了一个答案，猜错了</td>
+  </tr>
+  <tr>
+    <td><strong>不可见步骤</strong></td>
+    <td>人自动跳过但 AI 不会的步骤，必须显式写出来</td>
+    <td>AI 跳过了一个「常识性」的检查步骤</td>
+  </tr>
+</table>
+
+<details>
+  <summary>🔍 「不可见步骤」是什么意思？举个例子</summary>
+  <div class="answer">
+    <p>人写笔记时，看到一篇好文章会自然地判断「这个值不值得记」。这个判断对人来说太自然了，以至于你不会把它写进流程。</p>
+    <p>但 AI 不会做这个判断。如果你不写「第 0 步：判断用户的问题是否值得创建一篇独立笔记。如果只是一个简单事实（如『巴黎是法国首都』），直接回答，不要创建笔记」——AI 会为任何问题创建笔记。</p>
+    <p><strong>识别不可见步骤的方法：</strong>自己手动执行一遍任务，录下每一步你实际做了什么。然后问：有哪些操作你做了但没意识到？把这些写成显式步骤。</p>
+  </div>
+</details>
+
+<h2>7. 把一切串起来：工作流设计的思维流程</h2>
+
+<div class="diagram">
+面对一个新需求：「帮我设计一个能做 X 的 skill」
+
+第 1 层：分解（HTA）
+  「X 这个任务，从开始到结束，要经历哪几个阶段？」
+  → 画出 3-7 个顶层步骤，确保覆盖了完整的生命周期
+
+第 2 层：选模式（6 Patterns）
+  「每一步之间是什么关系？顺序？并行？分支？循环？」
+  → 为每对相邻步骤选组织模式
+
+第 3 层：加护栏（Guardrails）
+  「每一步最蠢的失败方式是什么？拦住了吗？」
+  → 硬约束（绝对不能做的事）+ 兜底（做不了时怎么办）
+
+第 4 层：定边界（Trust Boundary）
+  「哪些决定 AI 自己做？哪些必须问人？」
+  → 不可逆操作前 = Human-in-the-Loop
+
+第 5 层：补不可见步骤
+  「我自己做这件事时，做了哪些没意识到的判断？」
+  → 把隐性知识写成显式步骤
+</div>
+
+<p>注意：<strong>第 1 层和第 2 层决定了 80% 的设计质量。</strong>如果分解错了，后面加再多护栏也只是在错误的结构上打补丁。</p>
+
+<h2>8. 动手练习：为一个新需求设计工作流</h2>
+
+<div class="exercise">
+  <h3>✏️ 练习：设计一个「代码审查 Skill」的工作流</h3>
+
+  <p>场景：你的团队需要一个 skill，当用户提交 PR 或说「帮我 review 这段代码」时触发。要求：</p>
+  <ul>
+    <li>检查代码的正确性（逻辑错误、边界条件）</li>
+    <li>检查安全性（注入、权限、敏感信息）</li>
+    <li>检查可维护性（命名、结构、复杂度）</li>
+    <li>输出结构化的 review 意见，按严重程度分级</li>
+  </ul>
+
+  <p><strong>用四层思维流程来设计：</strong></p>
+  <ol>
+    <li><strong>分解：</strong>这个任务有哪些顶层步骤？写出 3-6 步。</li>
+    <li><strong>选模式：</strong>正确性、安全性、可维护性三者——是顺序检查还是并行检查？为什么？</li>
+    <li><strong>加护栏：</strong>如果代码太长（超过上下文窗口），怎么办？如果用户给的既不是 PR 也不是代码片段，怎么办？</li>
+    <li><strong>定边界：</strong>AI 发现的问题是否直接写入 PR comment？还是先列出来等用户确认？</li>
+  </ol>
+
+  <p style="margin-top: 1rem; color: var(--muted); font-size: 0.85rem;">
+    💡 不要急着翻答案。在纸上画出你的工作流结构，然后带着你的设计来找我讨论。我会帮你分析你的设计选择。
+  </p>
+</div>
+
+<details>
+  <summary>🔍 参考答案（点开前先自己设计）</summary>
+  <div class="answer">
+    <p><strong>第 1 层：分解</strong></p>
+    <ol>
+      <li>获取代码（读取 PR diff 或用户粘贴的代码）</li>
+      <li>判断代码规模 → 如果太大，要求用户缩小范围</li>
+      <li>正确性检查：逻辑错误、边界条件、空值处理</li>
+      <li>安全性检查：注入风险、权限问题、敏感信息泄露</li>
+      <li>可维护性检查：命名、结构、复杂度、重复代码</li>
+      <li>汇总：合并三项检查结果，按严重程度分级，生成结构化输出</li>
+    </ol>
+
+    <p><strong>第 2 层：选模式</strong></p>
+    <p>步骤 3、4、5 应该<strong>并行（Fan-out）</strong>，而非顺序。原因：正确性、安全性、可维护性是三个<strong>独立的维度</strong>，彼此没有依赖。如果顺序做，不仅慢，而且 AI 在前一个维度的分析可能影响后一个维度（上下文污染）。并行做，每个维度有独立的关注点，结果更干净。</p>
+
+    <p><strong>第 3 层：加护栏</strong></p>
+    <ul>
+      <li>代码超过 500 行 → 要求用户指定范围，不自动截断</li>
+      <li>输入不是代码 → 告知用户这不适合 code review</li>
+      <li>每一项发现必须附带行号和代码片段，不可模糊描述</li>
+      <li>不确定的发现标注「低置信度」，不假装确定</li>
+    </ul>
+
+    <p><strong>第 4 层：定边界</strong></p>
+    <p>AI 列出发现 + 分级 → 用户确认 → 用户决定哪些要改。AI 不直接修改代码（不可逆），除非用户明确说「全部按建议修改」。</p>
+
+    <p><strong>你的设计和这个答案有什么不同？不同不一定是错——可能你有更好的理由。</strong></p>
+  </div>
+</details>
+
+<h2>9. 关键收获</h2>
+
+<div class="callout">
+  <strong>本课核心：</strong><br>
+  1. <strong>工作流设计 = 问题分解</strong>——把复杂问题切成 AI 不会做错的子问题<br>
+  2. <strong>HTA 是分解工具</strong>——递归地问「完成这一步需要哪些子步骤」，拆到不可再分<br>
+  3. <strong>六种模式是组织工具</strong>——Pipeline / Routing / Fan-out / Orchestrator / Evaluator-Optimizer / Human-in-the-Loop<br>
+  4. <strong>四层思维流程</strong>——分解 → 选模式 → 加护栏 → 定边界 → 补不可见步骤<br>
+  5. <strong>分解决定 80% 的设计质量</strong>——分解对了，prompt 可以很简单。分解错了，护栏也救不回来。
+</div>
+
+<h2>10. 和前面 9 课的关系</h2>
+
+<table>
+  <tr><th>本课概念</th><th>连接回哪一课</th></tr>
+  <tr><td>「一步一动作」原则</td><td>第 1 课 P2：「把动词换成工具名」——同一个思想在设计层的表达</td></tr>
+  <tr><td>Pipeline / Fan-out / Orchestrator</td><td>第 2 课：独立并行 / 链式调用 / Workflow 编排——现在你知道了这些模式<strong>为什么</strong>这样设计</td></tr>
+  <tr><td>Guardrails 的「最蠢失败」检查</td><td>第 1 课 G：「如果 AI 做了最蠢的事，能被拦住吗」——现在你知道如何系统性地找出这些点</td></tr>
+  <tr><td>Human-in-the-Loop 的信任边界</td><td>第 8 课：Skill（软约束）vs Hook（硬约束）——HITL 是第三种边界：人类判断</td></tr>
+  <tr><td>Evaluator-Optimizer</td><td>第 5 课五步闭环：观察→诊断→修复 本质上就是一个手动 E-O 循环</td></tr>
+</table>
+
+<h2>11. 推荐阅读</h2>
+
+<p>📖 <strong>主阅读：</strong><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a> — 本课六种模式的原始出处。读原文，体会 Anthropic 的「简单优先」哲学。特别注意他们说的：「很多场景下，优化单个 LLM 调用就够了。不要上来就上 Agent。」</p>
+
+<p>📖 <strong>延伸：</strong><a href="../reference/workflow-design-patterns.html">📋 工作流设计模式速查卡</a> — 六种模式的精简参考，设计 skill 时放在手边。</p>
+
+<p>📖 <strong>实战：</strong>打开你的 study-note SKILL.md，用本课的 HTA 方法重新画一遍它的任务分解树。你可能会发现一些之前没意识到的设计选择。</p>
+
+<h2>12. 下一步</h2>
+
+<p>这是第 10 课，也是理论部分的最后一课。你已经从「怎么写 Skill」走到了「怎么想设计」。下一课是<strong>综合实战</strong>——把你学到的所有东西（T-P-G + 调度 + Context Engineering + 五步闭环 + MCP + Hooks + 缓存 + 工作流模式）拧在一起，从头设计并实现一个真实场景的 skill。</p>
+
+<p>但在那之前——</p>
+
+<div class="nav">
+  <p>
+    ← <a href="0009-prompt-caching-cache-hit-rate.html">第 9 课：缓存命中率优化</a> ·
+    <a href="../reference/skill-design-checklist.html">📋 Skill 设计检查清单</a> ·
+    <a href="../reference/workflow-design-patterns.html">📋 工作流设计模式速查卡</a>
+  </p>
+  <p style="margin-top: 1.2rem;">
+    ❓ <strong>有问题？</strong>直接问我。例如：<br>
+    「Fan-out 和 Orchestrator-Workers 的边界在哪？」<br>
+    「怎么判断一个步骤是否拆得足够细？」<br>
+    「我的 study-note 用了哪些模式？有没有用错的地方？」<br>
+    「做完练习了，帮我看看我的代码审查 skill 设计」
+  </p>
+  <p style="margin-top: 2rem; font-size: 0.8rem; color: #999;">
+    课程 0010 · 基于 <a href="../MISSION.md">Mission: AI 工作流与 Skills 工程设计</a>
+  </p>
+</div>
+
+</body>
+</html>
